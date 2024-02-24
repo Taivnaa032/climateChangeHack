@@ -12,6 +12,7 @@ const port = process.env.PORT;
 
 const app = express();
 app.use(express.json());
+app.use(cors());
 connect();
 
 app.use("/users", userRouter);

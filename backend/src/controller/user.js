@@ -62,22 +62,22 @@ exports.createUser = async (req, res) => {
       bio,
       location,
     });
-    res.status(200).send({ user, ownerAdded });
+    res.status(200).send({ user });
   } catch (error) {
     res.status(404).send(error.message);
   }
 };
 
 exports.Login = async (req, res) => {
-  const { username, password } = req.body;
+  const { email, password } = req.body;
   try {
-    const user = await User.findOne({ username }).populate("items");
+    const user = await User.findOne({ email }).populate("items");
     if (user) {
       const match = await bcrypt.compare(password, user.password);
       if (match) {
         const token = jwt.sign(
           {
-            username: user.email,
+            email: user.email,
           },
           process.env.ACCESS_TOKEN_KEY,
           { expiresIn: "24h" }
@@ -85,10 +85,10 @@ exports.Login = async (req, res) => {
 
         res.status(200).send({
           exp: "",
-          match,
+          type: "users",
           token,
           userId: user._id,
-          username: user.username,
+          email: user.email,
         });
       } else {
         res.status(404).send({ message: "wrong password" });
