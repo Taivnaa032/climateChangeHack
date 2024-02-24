@@ -58,7 +58,7 @@ exports.Login = async (req, res) => {
         );
 
         res.status(200).send({
-          exp: "",
+          type: "receivers",
           match,
           token,
           receiverId: receiver._id,
