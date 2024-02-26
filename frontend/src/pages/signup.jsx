@@ -1,7 +1,7 @@
 import instance from "@/lib/api";
-import axios from "axios";
 import { useRouter } from "next/router";
 import { useState } from "react";
+import toast, { Toaster } from "react-hot-toast";
 
 const SignUp = () => {
   const router = useRouter();
@@ -10,6 +10,11 @@ const SignUp = () => {
     username: "",
     email: "",
     password: "",
+    materials: [],
+    location: "",
+    items: [],
+    bio: "",
+    purpose: ""
   });
 
   const handleChange = (e) => {
@@ -23,29 +28,46 @@ const SignUp = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const type = formData.accountType == "User" ? "users" : "receivers";
-
-      await instance.post(`/${type}/create`, {
+      const type = formData.accountType === "User" ? "users" : "receivers";
+      const { data } = await instance.post(`/${type}/create`, {
         email: formData.email,
         password: formData.password,
         username: formData.username,
+        materials: formData.materials,
+        location: formData.location,
+        items: formData.items,
+        bio: formData.items,
+        purpose: formData.purpose
+
       });
-      toast.success("Амжилттай бүртгэгдлээ ", {
-        duration: 2000,
-        iconTheme: {
-          primary: "white",
-          secondary: "green",
-        },
-        style: {
-          background: "green",
-          color: "#fff",
-        },
-      });
-      router.push("/login");
+      console.log("data =====> ", data);
+      if (data) {
+        const token = data.token;
+        localStorage.setItem("climateAuth", JSON.stringify({ data, token }));
+        console.log("Data saved to localStorage:", { data, token });
+
+        toast.success("Successfully registered and logged in", {
+          duration: 2000,
+          iconTheme: {
+            primary: "white",
+            secondary: "green",
+          },
+          style: {
+            background: "green",
+            color: "#fff",
+          },
+        });
+
+        router.push("/");
+      } else {
+        console.error("Token not received in the response");
+      }
     } catch (error) {
-      console.log(error.message);
+      console.error("Error during sign-up:", error);
     }
+
   };
+
 
   const accountOptions = ["User", "Receiver"];
 
@@ -53,14 +75,14 @@ const SignUp = () => {
 
   return (
     <div
-      className="min-h-screen flex items-center justify-center bg-cover bg-center"
+      className="min-h-screen flex items-center justify-center bg-cover bg-center p-10"
       style={{
         backgroundImage:
           'url("https://img.freepik.com/free-vector/watercolor-oil-painting-background_52683-106439.jpg")',
       }}
     >
-      <div className="flex flex-row w-2/3 h-[100%] rounded-lg bg-slate-200  shadow-2xl">
-        <div className="bg-white p-8 rounded-bl-lg rounded-tl-lg w-96">
+      <div className="flex flex-row w-1/2 h-[100%]">
+        <div className="bg-white p-8 rounded-bl-lg rounded-tl-lg w-full mt-16">
           <h2 className="text-3xl font-bold text-[#387f75] mb-6 font-mono">
             Sign Up
           </h2>
@@ -135,27 +157,122 @@ const SignUp = () => {
               />
             </div>
 
+            {formData.accountType === "User" && (
+              <div className="mb-4">
+                <label
+                  htmlFor="bio"
+                  className="block text-sm font-semibold text-[#7bbcb6]"
+                >
+                  Bio:
+                </label>
+                <input
+                  type="text"
+                  id="bio"
+                  name="bio"
+                  value={formData.bio}
+                  onChange={handleChange}
+                  className="mt-1 p-3 w-full border-2 border-teal-400 rounded focus:outline-none focus:border-teal-600"
+                  
+                />
+              </div>
+            )}
+
+
+
+            {formData.accountType === "Receiver" && (
+              <div className="mb-4">
+                <label
+                  htmlFor="purpose"
+                  className="block text-sm font-semibold text-[#7bbcb6]"
+                >
+                  Purpose:
+                </label>
+                <input
+                  type="text"
+                  id="purpose"
+                  name="purpose"
+                  value={formData.purpose}
+                  onChange={handleChange}
+                  className="mt-1 p-3 w-full border-2 border-teal-400 rounded focus:outline-none focus:border-teal-600"
+                  
+                />
+              </div>)}
+
+            <div className="mb-4">
+              <label
+                htmlFor="materials"
+                className="block text-sm font-semibold text-[#7bbcb6]"
+              >
+                Materials:
+              </label>
+              <input
+                type="text"
+                id="materials"
+                name="materials"
+                value={formData.materials}
+                onChange={handleChange}
+                className="mt-1 p-3 w-full border-2 border-teal-400 rounded focus:outline-none focus:border-teal-600"
+                
+              />
+            </div>
+            <div className="mb-4">
+              <label
+                htmlFor="items"
+                className="block text-sm font-semibold text-[#7bbcb6]"
+              >
+                Items:
+              </label>
+              <input
+                type="text"
+                id="items"
+                name="items"
+                value={formData.items}
+                onChange={handleChange}
+                className="mt-1 p-3 w-full border-2 border-teal-400 rounded focus:outline-none focus:border-teal-600"
+                
+              />
+            </div>
+            <div className="mb-4">
+              <label
+                htmlFor="location"
+                className="block text-sm font-semibold text-[#7bbcb6]"
+              >
+                Location:
+              </label>
+              <input
+                type="text"
+                id="location"
+                name="location"
+                value={formData.location}
+                onChange={handleChange}
+                className="mt-1 p-3 w-full border-2 border-teal-400 rounded focus:outline-none focus:border-teal-600"
+                
+              />
+            </div>
+
+
+
+
             <button
               type="submit"
               className="bg-gradient-to-r from-[#387f75] to-[#7bbcb6] text-white p-3 rounded-full focus:outline-none focus:ring focus:border-teal-300"
             >
               Sign Up
             </button>
+            <p className="mt-3">
+              Already have an account?{" "}
+              <button
+                className="font-bold"
+                onClick={() => router.push("/login")}
+              >
+                Log In
+              </button>
+            </p>
+
+
           </form>
         </div>
-        <div
-          className="flex items-center justify-center bg-cover bg-center p-10 w-2/3"
-          style={{
-            backgroundImage:
-              'url("https://natureconservancy-h.assetsadobe.com/is/image/content/dam/tnc/nature/en/photos/Zugpsitze_mountain.jpg?crop=0%2C176%2C3008%2C1654&wid=4000&hei=2200&scl=0.752")',
-          }}
-        >
-          <p className="font-semifold font-mono text-3xl text-white">
-            {" "}
-            Embark on a journey towards a sustainable and eco-friendly future by
-            joining our community.
-          </p>
-        </div>
+
       </div>
     </div>
   );

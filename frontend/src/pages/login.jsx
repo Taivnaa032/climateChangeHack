@@ -10,6 +10,7 @@ const LogIn = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     login();
+    router.push("/")
   };
 
   return (
@@ -29,22 +30,7 @@ const LogIn = () => {
             <div className="mb-4"></div>
 
             <div className="mb-4">
-              <select
-                name="accountType"
-                required
-                className="form-control border-solid border-2 my-3"
-                value={formData.accountType}
-                onChange={handleChange}
-              >
-                <option value="" disabled>
-                  Select a Account Type
-                </option>
-                {accountOptions.map((account) => (
-                  <option key={account} value={account}>
-                    {account}
-                  </option>
-                ))}
-              </select>
+
               <label
                 htmlFor="email"
                 className="block text-sm font-semibold text-[#7bbcb6]"
@@ -87,7 +73,7 @@ const LogIn = () => {
               Log In
             </button>
           </form>
-          <p>
+          <p className="mt-3">
             Don't have an account?{" "}
             <button
               className="font-bold"

@@ -4,6 +4,7 @@ const Posts = require("../model/posts");
 const User = require("../model/users");
 const Item = require("../model/items");
 
+
 exports.getAllUsers = async (req, res) => {
   try {
     const users = await User.find({});
@@ -12,6 +13,7 @@ exports.getAllUsers = async (req, res) => {
     res.status(404).send(error);
   }
 };
+
 
 exports.getUser = async (req, res) => {
   try {
@@ -50,23 +52,57 @@ exports.getUserByItem = async (req, res) => {
 };
 
 exports.createUser = async (req, res) => {
-  const { password, image, gmail, username, bio, location } = req.body;
+  const { password, email, username, location, image, bio, materials, item } = req.body;
   const salt = await bcrypt.genSalt(10);
   const hashedPassword = await bcrypt.hash(password, salt);
   try {
+
+
+    //existing user
+    const existingUser = await User.findOne({ email });
+    if (existingUser) {
+      return res.status(401).send({
+        message: "user exists",
+      });
+    }
+
+
     const user = await User.create({
       password: hashedPassword,
-      gmail,
+      email,
       username,
+      location,
       image,
       bio,
-      location,
+      materials,
+      item
+
     });
-    res.status(200).send({ user });
+
+    await user.save();
+
+    const token = jwt.sign(
+      {
+        id: user.id,
+        email: user.email,
+      },
+      process.env.ACCESS_TOKEN_KEY,
+      { expiresIn: "24h" }
+    );
+    console.log("user ====> ", user)
+
+    res.status(200).send({
+      message: 'User created successfully',
+      user,
+      token
+    });
+
+
   } catch (error) {
     res.status(404).send(error.message);
   }
 };
+
 
 exports.Login = async (req, res) => {
   const { email, password } = req.body;

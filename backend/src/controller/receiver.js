@@ -23,20 +23,47 @@ exports.getReceiver = async (req, res) => {
 };
 
 exports.createReceiver = async (req, res) => {
-  const { password, image, email, username, materials, location } = req.body;
+  const { password, email, username, purpose, image, location, materials, items } = req.body;
   const salt = await bcrypt.genSalt(10);
   const hashedPassword = await bcrypt.hash(password, salt);
+
   try {
+
+    const existingReceiver = await Receiver.findOne({ email });
+    if (existingReceiver) {
+      return res.status(401).send({
+        message: "receiver exists",
+      });
+    }
+
     const receiver = await Receiver.create({
       password: hashedPassword,
-      items,
       email,
       username,
+      purpose,
       image,
-      materials,
       location,
+      materials,
+      items
     });
-    res.status(200).send(receiver);
+
+    const token = jwt.sign(
+      {
+        id: receiver.id,
+        email: receiver.email,
+      },
+      process.env.ACCESS_TOKEN_KEY,
+      { expiresIn: "24h" }
+    );
+
+
+    console.log("receiver ====> ", receiver)
+    const data = {
+      message: 'User created successfully',
+      receiver,
+      token
+    }
+    res.status(200).send(data);
   } catch (error) {
     res.status(404).send(error);
   }
@@ -51,6 +78,7 @@ exports.Login = async (req, res) => {
       if (match) {
         const token = jwt.sign(
           {
+            id: receiver.id,
             email: receiver.email,
           },
           process.env.ACCESS_TOKEN_KEY,

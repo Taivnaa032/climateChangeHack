@@ -1,7 +1,9 @@
 import instance from "@/lib/api";
+import axios from "axios";
 import { useRouter } from "next/router";
-import { createContext, useContext, useState } from "react";
-import toast, { Toaster } from "react-hot-toast";
+import { createContext, useContext, useState, useEffect } from "react";
+import toast from "react-hot-toast";
+
 export const AuthContext = createContext();
 
 const AuthProvider = ({ children }) => {
@@ -22,13 +24,13 @@ const AuthProvider = ({ children }) => {
   });
 
   const login = async () => {
-    const type = formData.accountType == "User" ? "users" : "receivers";
+    const type = formData.accountType === "User" ? "users" : "receivers";
     try {
       const { data } = await instance.post(`/${type}/login`, {
         email: formData.email,
         password: formData.password,
       });
-      toast.success("Амжилттай нэвтэрлээ", {
+      toast.success("Succesfully logged in", {
         duration: 2000,
         iconTheme: {
           primary: "white",
@@ -47,7 +49,7 @@ const AuthProvider = ({ children }) => {
         router.push("/home");
       }, 1000);
     } catch (error) {
-      toast.error("Email эсвэл нууц үг буруу байна", {
+      toast.error("Email or password is incorrect", {
         duration: 2000,
         iconTheme: {
           primary: "white",
@@ -69,6 +71,24 @@ const AuthProvider = ({ children }) => {
     });
   };
 
+  const [auth, setAuth] = useState({ user: null, token: '' });
+
+  axios.defaults.headers.common["Authorization"] = auth?.token;
+
+  useEffect(() => {
+    const data = localStorage.getItem("climateAuth");
+
+    if (data) {
+      const parseData = JSON.parse(data);
+      setAuth({
+        ...auth,
+        user: parseData.user,
+        token: parseData.token,
+      });
+    }
+
+  }, [auth.token]);
+
   return (
     <AuthContext.Provider
       value={{
@@ -77,6 +97,8 @@ const AuthProvider = ({ children }) => {
         accountOptions: accountOptions,
         formData: formData,
         userInfo: userInfo,
+        auth: auth,
+        setAuth: setAuth
       }}
     >
       {children}

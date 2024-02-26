@@ -11,15 +11,16 @@ const ItemSchema = new Schema({
   weight: { type: Number, default: 0 },
   count: { type: Number, default: 0 },
 });
+
 const UserSchema = new Schema({
-  image: { type: String },
-  username: { type: String },
-  email: { type: String },
-  location: { type: String },
+  image: { type: String, default: '' },
+  username: { type: String, required: true },
+  email: { type: String, required: true },
+  location: { type: String, default: '' },
   password: { type: String, required: true },
-  items: { type: [ItemSchema] },
-  materials: { type: [String] },
-  bio: { type: String },
+  items: { type: [ItemSchema], default:[] },
+  materials: { type: [String], default:[] },
+  bio: { type: String, default: "" },
   createdAt: { type: String, default: moment().format("MMMM Do YYYY") },
 });
 
