@@ -13,15 +13,15 @@ const ItemSchema = new Schema({
 });
 
 const ReceiverSchema = new Schema({
-  username: { type: String },
-  email: { type: String },
+  username: { type: String, required: true },
+  email: { type: String, required: true },
   password: { type: String, required: true },
-  purpose: { type: String },
-  image: { type: String },
-  location: { type: String },
+  purpose: { type: String, default: '' },
+  image: { type: String, default: '' },
+  location: { type: String, default: '' },
   createdAt: { type: String, default: moment().format("MMMM Do YYYY") },
-  materials: { type: [String] },
-  items: { type: [ItemSchema] },
+  materials: { type: [String], default: [] },
+  items: { type: [ItemSchema], default: [] },
 });
 
 const Receiver = mongoose.model("receivers", ReceiverSchema);
