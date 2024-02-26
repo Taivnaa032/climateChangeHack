@@ -66,7 +66,7 @@ exports.searchUsers = async (req, res) => {
         },
       },
     };
-    const users = await User.find(query);
+    const users = await User.find(query).populate("items.item");
     res.status(200).send(users);
   } catch (err) {
     req.status(404).send(err);
@@ -83,7 +83,7 @@ exports.searchReceivers = async (req, res) => {
         },
       },
     };
-    const receivers = await Receiver.find(query);
+    const receivers = await Receiver.find(query).populate("items.item");
     res.status(200).send(receivers);
   } catch (err) {
     req.status(404).send(err);
@@ -107,5 +107,20 @@ exports.searchReceiversByMaterial = async (req, res) => {
     res.status(200).send(receivers);
   } catch (err) {
     req.status(404).send(err);
+  }
+};
+
+exports.createItem = async (req, res) => {
+  const { owners, receivers, title, material } = req.body;
+  try {
+    const item = await Item.create({
+      owners,
+      receivers,
+      title,
+      material,
+    });
+    res.status(200).json(item);
+  } catch (error) {
+    res.status(404).send(error);
   }
 };

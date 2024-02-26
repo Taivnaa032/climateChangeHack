@@ -1,6 +1,6 @@
 import "@/styles/globals.css";
-import SideNavbar from "../navbar/sideNavbar";
-import TopNavbar from "../navbar/topNavbar";
+import SideNavbar from "../components/navbar/sideNavbar";
+import TopNavbar from "../components/navbar/topNavbar";
 import AuthProvider from "@/context/Auth";
 import { Toaster } from "react-hot-toast";
 
