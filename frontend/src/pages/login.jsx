@@ -26,6 +26,22 @@ const LogIn = () => {
           <h2 className="text-3xl font-bold text-[#387f75] mb-6 font-mono">
             Log In
           </h2>
+          <select
+            name="accountType"
+            required
+            className="form-control border-solid border-2"
+            value={formData.accountType}
+            onChange={handleChange}
+          >
+            <option value="" disabled>
+              Select a Account Type
+            </option>
+            {accountOptions.map((account) => (
+              <option key={account} value={account}>
+                {account}
+              </option>
+            ))}
+          </select>
           <form onSubmit={handleSubmit}>
             <div className="mb-4"></div>
 

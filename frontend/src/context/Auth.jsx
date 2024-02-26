@@ -5,9 +5,15 @@ import toast from "react-hot-toast";
 
 export const AuthContext = createContext();
 import Cookies from "js-cookie";
+import axios from "axios";
 
 const AuthProvider = ({ children }) => {
   const router = useRouter();
+
+  const [auth, setAuth] = useState({ user: null, token: '' });
+
+  axios.defaults.headers.common["Authorization"] = auth?.token;
+
 
   const accountOptions = ["User", "Receiver"];
 
