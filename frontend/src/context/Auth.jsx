@@ -1,10 +1,10 @@
 import instance from "@/lib/api";
-import axios from "axios";
 import { useRouter } from "next/router";
 import { createContext, useContext, useState, useEffect } from "react";
 import toast from "react-hot-toast";
 
 export const AuthContext = createContext();
+import Cookies from "js-cookie";
 
 const AuthProvider = ({ children }) => {
   const router = useRouter();
@@ -45,6 +45,9 @@ const AuthProvider = ({ children }) => {
         type: data.type,
         id: data.userId,
       });
+      Cookies.set("token", data.token);
+      Cookies.set("userId", data.userId);
+      Cookies.set("type", data.type);
       setTimeout(() => {
         router.push("/home");
       }, 1000);
@@ -71,23 +74,16 @@ const AuthProvider = ({ children }) => {
     });
   };
 
-  const [auth, setAuth] = useState({ user: null, token: '' });
-
-  axios.defaults.headers.common["Authorization"] = auth?.token;
-
-  useEffect(() => {
-    const data = localStorage.getItem("climateAuth");
-
-    if (data) {
-      const parseData = JSON.parse(data);
-      setAuth({
-        ...auth,
-        user: parseData.user,
-        token: parseData.token,
-      });
+  instance.interceptors.request.use(
+    (config) => {
+      const token = Cookies.get("token");
+      config.headers.token = token;
+      return config;
+    },
+    function (error) {
+      return Promise.reject(error);
     }
-
-  }, [auth.token]);
+  );
 
   return (
     <AuthContext.Provider
@@ -98,7 +94,7 @@ const AuthProvider = ({ children }) => {
         formData: formData,
         userInfo: userInfo,
         auth: auth,
-        setAuth: setAuth
+        setAuth: setAuth,
       }}
     >
       {children}

@@ -1,15 +1,18 @@
 import { useEffect, useState } from "react";
-import Post from "./postReceiver";
+import PostReceiver from "../components/post/postReceiver";
 import instance from "@/lib/api";
 import { useAuth } from "@/context/Auth";
+import Cookie from "js-cookie";
+import PostUser from "@/components/post/postUser";
 
 const Profile = () => {
-  const { userInfo } = useAuth();
+  const userId = Cookie.get("userId");
+  const type = Cookie.get("type");
   const [user, setUser] = useState();
   useEffect(() => {
     const getUserInfo = async () => {
       try {
-        const { data } = await instance.get(`/${userInfo.type}/${userInfo.id}`);
+        const { data } = await instance.get(`/${type}/${userId}`);
         setUser(data);
       } catch (error) {
         console.log(error.message);
@@ -37,18 +40,20 @@ const Profile = () => {
             />
           </svg>
 
-          <p className="text-2xl font-semibold">Munkhtenger</p>
-          <p className="text-slate-500 text-center">
-            I'm willing to help people who are trying to make this world green
-            place
-          </p>
+          <p className="text-2xl font-semibold">{user?.username}</p>
+          <p className="text-slate-500 text-center">{user?.bio}</p>
         </div>
       </div>
-      <div className="w-2/3 bg-slate-300 rounded flex flex-row">
+      <div className="w-1/4 bg-slate-300 rounded flex flex-col">
         <div className="w-full grid grid-cols-1 items-center">
           Posts
-          <Post />
+          {type === "users" ? <PostUser /> : <PostReceiver />}
         </div>
+      </div>
+      <div>
+        <button className="bg-green-400 text-white p-3 rounded-xl w-40">
+          Add New
+        </button>
       </div>
     </div>
   );

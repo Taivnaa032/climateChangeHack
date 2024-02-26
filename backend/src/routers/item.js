@@ -8,6 +8,7 @@ const {
   searchReceivers,
   searchUsersByMaterial,
   searchReceiversByMaterial,
+  createItem,
 } = require("../controller/item");
 
 const itemRouter = express.Router();
@@ -20,6 +21,7 @@ itemRouter
   .get("/users/:id", searchUsers)
   .get("/receivers/:id", searchReceivers)
   .get("/:material/users", searchUsersByMaterial)
-  .get("/:material/receivers", searchReceiversByMaterial);
+  .get("/:material/receivers", searchReceiversByMaterial)
+  .post("/create", createItem);
 
 module.exports = itemRouter;

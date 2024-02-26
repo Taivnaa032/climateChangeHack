@@ -14,7 +14,7 @@ const SignUp = () => {
     location: "",
     items: [],
     bio: "",
-    purpose: ""
+    purpose: "",
   });
 
   const handleChange = (e) => {
@@ -37,8 +37,7 @@ const SignUp = () => {
         location: formData.location,
         items: formData.items,
         bio: formData.items,
-        purpose: formData.purpose
-
+        purpose: formData.purpose,
       });
       console.log("data =====> ", data);
       if (data) {
@@ -65,9 +64,7 @@ const SignUp = () => {
     } catch (error) {
       console.error("Error during sign-up:", error);
     }
-
   };
-
 
   const accountOptions = ["User", "Receiver"];
 
@@ -172,12 +169,9 @@ const SignUp = () => {
                   value={formData.bio}
                   onChange={handleChange}
                   className="mt-1 p-3 w-full border-2 border-teal-400 rounded focus:outline-none focus:border-teal-600"
-                  
                 />
               </div>
             )}
-
-
 
             {formData.accountType === "Receiver" && (
               <div className="mb-4">
@@ -194,9 +188,9 @@ const SignUp = () => {
                   value={formData.purpose}
                   onChange={handleChange}
                   className="mt-1 p-3 w-full border-2 border-teal-400 rounded focus:outline-none focus:border-teal-600"
-                  
                 />
-              </div>)}
+              </div>
+            )}
 
             <div className="mb-4">
               <label
@@ -212,7 +206,6 @@ const SignUp = () => {
                 value={formData.materials}
                 onChange={handleChange}
                 className="mt-1 p-3 w-full border-2 border-teal-400 rounded focus:outline-none focus:border-teal-600"
-                
               />
             </div>
             <div className="mb-4">
@@ -229,7 +222,6 @@ const SignUp = () => {
                 value={formData.items}
                 onChange={handleChange}
                 className="mt-1 p-3 w-full border-2 border-teal-400 rounded focus:outline-none focus:border-teal-600"
-                
               />
             </div>
             <div className="mb-4">
@@ -246,12 +238,8 @@ const SignUp = () => {
                 value={formData.location}
                 onChange={handleChange}
                 className="mt-1 p-3 w-full border-2 border-teal-400 rounded focus:outline-none focus:border-teal-600"
-                
               />
             </div>
-
-
-
 
             <button
               type="submit"
@@ -268,11 +256,8 @@ const SignUp = () => {
                 Log In
               </button>
             </p>
-
-
           </form>
         </div>
-
       </div>
     </div>
   );

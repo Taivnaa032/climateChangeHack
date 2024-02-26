@@ -3,7 +3,7 @@ const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
 const ItemSchema = new Schema({
-  material: { type: String },
+  material: { type: Schema.ObjectId, ref: "materials" },
   title: { type: String },
   owners: [
     {
