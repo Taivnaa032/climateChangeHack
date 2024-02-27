@@ -54,7 +54,7 @@ export const Material = ({ type, userType }) => {
         <div className="hidden absolute pl-2 top-[-100] md:top-[20rem] w-full h-1/2 bg-gray-800 bg-opacity-75 justify-center items-center text-white group-hover:flex">
           <ul className="flex flex-col items-start">
             {materials?.items?.map((item, i) => (
-              <button>
+              <button key={i}>
                 <li
                   onClick={() => searchItems(item?._id)}
                   className="hover:underline cursor-pointer"

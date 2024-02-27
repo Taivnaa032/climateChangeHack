@@ -1,10 +1,37 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
+
+import algoliasearch from "algoliasearch";
+
+const client = algoliasearch("8F370138HD", "50cc35cd9d0d70834d9d9e4dbaa6c335");
+const index = client.initIndex("items");
 
 const TopNavbar = () => {
   const router = useRouter();
 
   const [showAdditionalDiv, setShowAdditionalDiv] = useState(false);
+  const [search, setSearch] = useState();
+
+  const searchItems = async (event) => {
+    event.preventDefault(); // Move event.preventDefault() here
+    const searchedTitle = event.target.value;
+
+    // Ensure index is defined
+    if (!index) {
+      console.error("Index is not defined");
+      return;
+    }
+
+    await index
+      .search(searchedTitle)
+      .then(({ hits }) => {
+        console.log(hits);
+        // Update state or do something with the hits
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
 
   const handleButtonClick = () => {
     setShowAdditionalDiv(true);
@@ -110,14 +137,13 @@ const TopNavbar = () => {
               <input
                 type="text"
                 placeholder="Search... "
-                // value={searchTerm}
-                // onChange={(e) => setSearchTerm(e.target.value)}
+                onChange={searchItems}
                 className="w-72 p-2 ml-4 font-medium bg-inherit focus:outline-none bg-slate-100 rounded-3xl hover:placeholder-slate-400 placeholder-gray-500"
               />
             </div>
           </div>
 
-          <div>
+          <div className="flex flex-row items-center gap-5">
             <svg
               onClick={() => router.push("/profile")}
               xmlns="http://www.w3.org/2000/svg"
