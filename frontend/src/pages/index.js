@@ -37,7 +37,6 @@ const Home = () => {
     }
   }, []);
 
-  console.log(type);
   return (
     <div className="md:ml-52 mt-24 ml-[5%] mr-[5%] ">
       <h1 className="text-center text-2xl text-white font-semibold">
