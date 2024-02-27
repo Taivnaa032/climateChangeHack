@@ -12,7 +12,6 @@ const AuthProvider = ({ children }) => {
 
   const [auth, setAuth] = useState({ user: null, token: '' });
 
-  axios.defaults.headers.common["Authorization"] = auth?.token;
 
 
   const accountOptions = ["User", "Receiver"];
@@ -35,7 +34,7 @@ const AuthProvider = ({ children }) => {
       const { data } = await instance.post(`/${type}/login`, {
         email: formData.email,
         password: formData.password,
-      });
+  });
       toast.success("Succesfully logged in", {
         duration: 2000,
         iconTheme: {

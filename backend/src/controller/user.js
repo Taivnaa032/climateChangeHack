@@ -30,7 +30,7 @@ exports.addItems = async (req, res) => {
     const { items } = req.body;
     const _id = req.params.id;
     const item = await User.updateMany(
-      { _id },
+      { _id: _id },
       {
         $set: { items },
       }
@@ -52,7 +52,7 @@ exports.getUserByItem = async (req, res) => {
 };
 
 exports.createUser = async (req, res) => {
-  const { password, email, username, location, image, bio, materials, item } = req.body;
+  const { password, email, username, location, image, bio, materials, items } = req.body;
   const salt = await bcrypt.genSalt(10);
   const hashedPassword = await bcrypt.hash(password, salt);
   try {
@@ -66,7 +66,6 @@ exports.createUser = async (req, res) => {
       });
     }
 
-
     const user = await User.create({
       password: hashedPassword,
       email,
@@ -75,11 +74,8 @@ exports.createUser = async (req, res) => {
       image,
       bio,
       materials,
-      item
-
+      items
     });
-
-    await user.save();
 
     const token = jwt.sign(
       {

@@ -9,12 +9,16 @@ const {
   searchUsersByMaterial,
   searchReceiversByMaterial,
   createItem,
+  getAllItems,
+  getItemByTitle
 } = require("../controller/item");
 
 const itemRouter = express.Router();
 
 itemRouter
+  .get("/title/:title", getItemByTitle)
   .get("/:id", getUsersByItem)
+  .get("/all", getAllItems)
   .get("/material/:material", getItemsByMaterial)
   .put("/addOwner/:id", addOwner)
   .put("/addReceiver/:id", addReceiver)

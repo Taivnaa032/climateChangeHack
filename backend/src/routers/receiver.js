@@ -18,6 +18,7 @@ receiverRouter
   .post("/login", Login)
   .put("/:id", updateUser)
   .get("/getToken", getUserDataByToken)
+  .post("/addItems/:id")
   .delete("/:id", deleteUser);
 
 module.exports = receiverRouter;
