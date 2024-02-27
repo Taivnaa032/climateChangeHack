@@ -17,6 +17,7 @@ const ItemSchema = new Schema({
       ref: "users",
     },
   ],
+  
 });
 
 const Item = mongoose.model("items", ItemSchema);

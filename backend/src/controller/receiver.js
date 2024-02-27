@@ -161,3 +161,20 @@ exports.deleteUser = async (req, res) => {
     res.status(404).send(error);
   }
 };
+
+
+exports.addItems = async (req, res) => {
+  try {
+    const { items } = req.body;
+    const _id = req.params.id;
+    const item = await Receiver.updateMany(
+      { _id },
+      {
+        $set: { items },
+      }
+    ).populate("items");
+    res.status(200).send(item);
+  } catch (error) {
+    res.status(404).send(error);
+  }
+};

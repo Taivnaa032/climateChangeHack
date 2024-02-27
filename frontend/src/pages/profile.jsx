@@ -1,26 +1,72 @@
-import { useEffect, useState } from "react";
+import React, { useState, useEffect } from "react";
 import PostReceiver from "../components/post/postReceiver";
 import instance from "@/lib/api";
-import { useAuth } from "@/context/Auth";
 import Cookie from "js-cookie";
 import PostUser from "@/components/post/postUser";
+
+import Modal from "./modal"
+
+// Add the Modal component here
+
+
+
 
 const Profile = () => {
   const userId = Cookie.get("userId");
   const type = Cookie.get("type");
   const [user, setUser] = useState();
+  const [loading, setLoading] = useState(true);
+  const [data, setData] = useState([])
+
+
+
+
+
+  // State for managing modal
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+
+  // useEffect(() => {
+  //   instance.get(`/items/all`)
+  //     .then(res => {
+  //       setData(res.data);
+  //     })
+  //     .catch(err => console.log(err))
+  // }, [])
+
+
   useEffect(() => {
     const getUserInfo = async () => {
       try {
+        if (!userId || !type) {
+          console.error("UserId or type is undefined.");
+          return;
+        }
+
         const { data } = await instance.get(`/${type}/${userId}`);
         setUser(data);
+        setLoading(false);
       } catch (error) {
-        console.log(error.message);
+        console.error(error.message);
+        setLoading(false);
       }
     };
+
     getUserInfo();
-  }, []);
-  console.log(user);
+  }, [userId, type]); // Include userId and type as dependencies
+
+  if (loading) {
+    return <p>Loading...</p>; // You can replace this with a loading spinner or any other UI
+  }
+
+
+
+
+
+
+
+
+
   return (
     <div className="md:ml-52 mt-24 ml-[5%] mr-[5%] flex flex-col  md:flex-row gap-10">
       <div className="bg-slate-200 w-full md:w-1/3 flex  flex-col items-center rounded gap-4 break-words p-10 ">
@@ -50,10 +96,23 @@ const Profile = () => {
           {type === "users" ? <PostUser /> : <PostReceiver />}
         </div>
       </div>
-      <div>
-        <button className="bg-green-400 text-white p-3 rounded-xl w-40">
-          Add New
-        </button>
+
+
+      <div className="w-1/4 bg-slate-300 rounded flex flex-col">
+        <div className="w-full grid grid-cols-1 items-center">
+
+
+          {/* Trigger button to open the modal */}
+          <button
+            className="bg-blue-500 text-white p-2 rounded hover:bg-blue-700"
+            onClick={() => setIsModalOpen(true)}
+          >
+            Open Modal
+          </button>
+
+          {/* Modal component */}
+          <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}/>
+        </div>
       </div>
     </div>
   );
