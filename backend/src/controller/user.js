@@ -50,6 +50,28 @@ exports.addItems = async (req, res) => {
   }
 };
 
+exports.addMaterial = async (req, res) => {
+  try {
+    const { materials } = req.body;
+    const _id = req.params.id;
+
+    const user = await User.findById(_id);
+    if (!user) {
+      return res.status(404).send("User not found");
+    }
+
+    const updatedUser = await User.findByIdAndUpdate(
+      _id,
+      { $push: { materials: materials } },
+      { new: true }
+    );
+
+    res.status(200).send(updatedUser);
+  } catch (error) {
+    res.status(500).send(error.message);
+  }
+};
+
 exports.getUserByItem = async (req, res) => {
   try {
     const _id = req.params.id;

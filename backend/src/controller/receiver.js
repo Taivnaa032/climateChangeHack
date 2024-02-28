@@ -189,3 +189,25 @@ exports.addItems = async (req, res) => {
     res.status(500).send(error.message);
   }
 };
+
+exports.addMaterial = async (req, res) => {
+  try {
+    const { materials } = req.body;
+    const _id = req.params.id;
+
+    const user = await Receiver.findById(_id);
+    if (!user) {
+      return res.status(404).send("Receiver not found");
+    }
+
+    const updatedUser = await Receiver.findByIdAndUpdate(
+      _id,
+      { $push: { materials: materials } },
+      { new: true }
+    );
+
+    res.status(200).send(updatedUser);
+  } catch (error) {
+    res.status(500).send(error.message);
+  }
+};

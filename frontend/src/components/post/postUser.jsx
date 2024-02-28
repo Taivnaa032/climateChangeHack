@@ -18,7 +18,9 @@ const PostUser = () => {
         <p>Caption: {caption}</p>
       </div>
       <ProgressBarUser />
-      <button className="bg-green-500 w-1/4 rounded text-white">Request</button>
+      <button className="bg-green-600 text-white py-1 px-5 rounded-lg">
+        Request
+      </button>
     </div>
   );
 };
