@@ -86,7 +86,7 @@ const TopNavbar = () => {
 
                   <button
                     className="flex flex-col  justify-center text-[#98e4d9] items-center hover:bg-[#e2ded562] hover:text-[#317268] transition duration-100 w-full h-16 rounded-lg"
-                    onClick={() => router.push("/home")}
+                    onClick={() => router.push("/")}
                   >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"

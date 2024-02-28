@@ -10,9 +10,7 @@ const SignUp = () => {
     username: "",
     email: "",
     password: "",
-    materials: [],
     location: "",
-    items: [],
     bio: "",
     purpose: "",
   });
@@ -29,41 +27,59 @@ const SignUp = () => {
     e.preventDefault();
     try {
       const type = formData.accountType === "User" ? "users" : "receivers";
-      const { data } = await instance.post(`/${type}/create`, {
+
+      const requestBody = {
         email: formData.email,
         password: formData.password,
         username: formData.username,
-        materials: formData.materials,
         location: formData.location,
-        bio: formData.bio,
-        purpose: formData.purpose,
-      });
-      console.log("data =====> ", data);
-      if (data) {
-        const token = data.token;
-        localStorage.setItem("climateAuth", JSON.stringify({ data, token }));
-        console.log("Data saved to localStorage:", { data, token });
+      };
 
-        toast.success("Successfully registered and logged in", {
-          duration: 2000,
-          iconTheme: {
-            primary: "white",
-            secondary: "green",
-          },
-          style: {
-            background: "green",
-            color: "#fff",
-          },
-        });
-
-        router.push("/");
-      } else {
-        console.error("Token not received in the response");
+      // Conditionally add the bio field for the "User" account type
+      if (formData.accountType === "User") {
+        requestBody.bio = formData.bio;
       }
+
+      // Conditionally add the purpose field for the "Receiver" account type
+      if (formData.accountType === "Receiver") {
+        requestBody.purpose = formData.purpose;
+      }
+
+      const { data } = await instance.post(`/${type}/create`, requestBody);
+
+      toast.success("Successfully signed up", {
+        duration: 2000,
+        iconTheme: {
+          primary: "white",
+          secondary: "green",
+        },
+        style: {
+          background: "green",
+          color: "#fff",
+        },
+      });
+
+      router.push("/login");
+
+      console.log("data =====> ", data);
     } catch (error) {
       console.error("Error during sign-up:", error);
+      if (error.response) {
+        // The request was made and the server responded with a status code
+        // that falls out of the range of 2xx
+        console.error("Response data:", error.response.data);
+        console.error("Response status:", error.response.status);
+        console.error("Response headers:", error.response.headers);
+      } else if (error.request) {
+        // The request was made but no response was received
+        console.error("No response received:", error.request);
+      } else {
+        // Something happened in setting up the request that triggered an Error
+        console.error("Error setting up the request:", error.message);
+      }
     }
   };
+
 
   const accountOptions = ["User", "Receiver"];
 
@@ -188,39 +204,6 @@ const SignUp = () => {
                 />
               </div>
             )}
-
-            <div className="mb-4">
-              <label
-                htmlFor="materials"
-                className="block text-sm font-semibold text-[#7bbcb6]"
-              >
-                Materials:
-              </label>
-              <input
-                type="text"
-                id="materials"
-                name="materials"
-                value={formData.materials}
-                onChange={handleChange}
-                className="mt-1 p-3 w-full border-2 border-teal-400 rounded focus:outline-none focus:border-teal-600"
-              />
-            </div>
-            <div className="mb-4">
-              <label
-                htmlFor="items"
-                className="block text-sm font-semibold text-[#7bbcb6]"
-              >
-                Items:
-              </label>
-              <input
-                type="text"
-                id="items"
-                name="items"
-                value={formData.items}
-                onChange={handleChange}
-                className="mt-1 p-3 w-full border-2 border-teal-400 rounded focus:outline-none focus:border-teal-600"
-              />
-            </div>
             <div className="mb-4">
               <label
                 htmlFor="location"

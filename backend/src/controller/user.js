@@ -6,7 +6,7 @@ const Item = require("../model/items");
 
 exports.getAllUsers = async (req, res) => {
   try {
-    const users = await User.find({});
+    const users = await User.find({}).populate("items.item");
     res.status(200).json(users);
   } catch (error) {
     res.status(404).send(error);
@@ -83,10 +83,11 @@ exports.getUserByItem = async (req, res) => {
 };
 
 exports.createUser = async (req, res) => {
-  const { password, email, username, location, image, bio, materials, items } =
-    req.body;
+  const { password, email, username, location, image, bio } = req.body;
   const salt = await bcrypt.genSalt(10);
   const hashedPassword = await bcrypt.hash(password, salt);
+
+  console.log(req.body)
   try {
     //existing user
     const existingUser = await User.findOne({ email });
@@ -103,9 +104,9 @@ exports.createUser = async (req, res) => {
       location,
       image,
       bio,
-      materials,
-      items,
     });
+
+    console.log(user)
 
     const token = jwt.sign(
       {
