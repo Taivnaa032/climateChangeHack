@@ -58,8 +58,8 @@ const Home = () => {
               <div className="bg-slate-300 p-4 rounded-lg" key={index}>
                 <div className="flex flex-col gap-2 mt-4">
                   <p className="text-2xl text-black">{user?.username}</p>
-                  {user.bio && <p className="text-2xl text-black">{user?.bio}</p>}
-                  {user.location && <p className="text-2xl text-black">{user?.location}</p>}
+                  <p className="text-2xl text-black">{user?.bio}</p>
+                   <p className="text-2xl text-black">{user?.location}</p>
                 </div>
               </div>
             );
