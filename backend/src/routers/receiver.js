@@ -7,6 +7,7 @@ const {
   getUserDataByToken,
   deleteUser,
   getAllReceivers,
+  addItems,
 } = require("../controller/receiver");
 
 const receiverRouter = express.Router();
@@ -18,7 +19,7 @@ receiverRouter
   .post("/login", Login)
   .put("/:id", updateUser)
   .get("/getToken", getUserDataByToken)
-  .post("/addItems/:id")
+  .post("/addItems/:id", addItems)
   .delete("/:id", deleteUser);
 
 module.exports = receiverRouter;
