@@ -1,7 +1,7 @@
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-const Posts = require("../model/posts");
 const Receiver = require("../model/receivers");
+const Item = require("../model/items");
 
 exports.getAllReceivers = async (req, res) => {
   try {
@@ -162,19 +162,30 @@ exports.deleteUser = async (req, res) => {
   }
 };
 
-
 exports.addItems = async (req, res) => {
   try {
     const { items } = req.body;
     const _id = req.params.id;
-    const item = await Receiver.updateMany(
-      { _id },
-      {
-        $set: { items },
-      }
-    ).populate("items");
-    res.status(200).send(item);
+
+    const user = await Receiver.findById(_id);
+    if (!user) {
+      return res.status(404).send("Receiver not found");
+    }
+
+    const updatedUser = await Receiver.findByIdAndUpdate(
+      _id,
+      { $push: { items: { $each: items } } },
+      { new: true }
+    );
+
+    await Promise.all(
+      items.map(async (item) => {
+        await Item.findByIdAndUpdate(item.item, { $push: { receivers: _id } });
+      })
+    );
+
+    res.status(200).send(updatedUser);
   } catch (error) {
-    res.status(404).send(error);
+    res.status(500).send(error.message);
   }
 };

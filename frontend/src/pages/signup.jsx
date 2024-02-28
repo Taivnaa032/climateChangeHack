@@ -35,13 +35,12 @@ const SignUp = () => {
         username: formData.username,
         materials: formData.materials,
         location: formData.location,
-        items: formData.items,
         bio: formData.bio,
         purpose: formData.purpose,
       });
       console.log("data =====> ", data);
-        if (data) {
-          const token = data.token;
+      if (data) {
+        const token = data.token;
         localStorage.setItem("climateAuth", JSON.stringify({ data, token }));
         console.log("Data saved to localStorage:", { data, token });
 
@@ -67,8 +66,6 @@ const SignUp = () => {
   };
 
   const accountOptions = ["User", "Receiver"];
-
-  console.log(formData);
 
   return (
     <div

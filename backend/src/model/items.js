@@ -14,10 +14,9 @@ const ItemSchema = new Schema({
   receivers: [
     {
       type: Schema.Types.ObjectId,
-      ref: "users",
+      ref: "receivers",
     },
   ],
-  
 });
 
 const Item = mongoose.model("items", ItemSchema);

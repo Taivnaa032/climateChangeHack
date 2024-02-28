@@ -7,7 +7,7 @@ exports.getAllItems = async (req, res) => {
     let query = {};
 
     // Check if there is a query parameter named 'id' and it's not 'all'
-    if (req.query.id && req.query.id !== 'all') {
+    if (req.query.id && req.query.id !== "all") {
       query._id = req.query.id;
     }
 
@@ -21,17 +21,14 @@ exports.getAllItems = async (req, res) => {
 
 exports.getItemByTitle = async (req, res) => {
   try {
-    const {title} = req.params;
-    const item = await Item.find({title});
-    res.status(200).send(item);
+    const { title } = req.params;
+    const item = await Item.find({ title });
+    res.status(200).send(item[0]);
   } catch (error) {
     console.error("Error in getAllItems:", error);
     res.status(500).send({ error: "Internal Server Error" });
   }
 };
-
-
-
 
 exports.getUsersByItem = async (req, res) => {
   try {

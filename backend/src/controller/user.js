@@ -4,7 +4,6 @@ const Posts = require("../model/posts");
 const User = require("../model/users");
 const Item = require("../model/items");
 
-
 exports.getAllUsers = async (req, res) => {
   try {
     const users = await User.find({});
@@ -13,7 +12,6 @@ exports.getAllUsers = async (req, res) => {
     res.status(404).send(error);
   }
 };
-
 
 exports.getUser = async (req, res) => {
   try {
@@ -24,20 +22,31 @@ exports.getUser = async (req, res) => {
     res.send(error);
   }
 };
-
 exports.addItems = async (req, res) => {
   try {
     const { items } = req.body;
     const _id = req.params.id;
-    const item = await User.updateMany(
-      { _id: _id },
-      {
-        $set: { items },
-      }
-    ).populate("items");
-    res.status(200).send(item);
+
+    const user = await User.findById(_id);
+    if (!user) {
+      return res.status(404).send("User not found");
+    }
+
+    const updatedUser = await User.findByIdAndUpdate(
+      _id,
+      { $push: { items: { $each: items } } },
+      { new: true }
+    );
+
+    await Promise.all(
+      items.map(async (item) => {
+        await Item.findByIdAndUpdate(item.item, { $push: { owners: _id } });
+      })
+    );
+
+    res.status(200).send(updatedUser);
   } catch (error) {
-    res.status(404).send(error);
+    res.status(500).send(error.message);
   }
 };
 
@@ -52,12 +61,11 @@ exports.getUserByItem = async (req, res) => {
 };
 
 exports.createUser = async (req, res) => {
-  const { password, email, username, location, image, bio, materials, items } = req.body;
+  const { password, email, username, location, image, bio, materials, items } =
+    req.body;
   const salt = await bcrypt.genSalt(10);
   const hashedPassword = await bcrypt.hash(password, salt);
   try {
-
-
     //existing user
     const existingUser = await User.findOne({ email });
     if (existingUser) {
@@ -74,7 +82,7 @@ exports.createUser = async (req, res) => {
       image,
       bio,
       materials,
-      items
+      items,
     });
 
     const token = jwt.sign(
@@ -85,20 +93,17 @@ exports.createUser = async (req, res) => {
       process.env.ACCESS_TOKEN_KEY,
       { expiresIn: "24h" }
     );
-    console.log("user ====> ", user)
+    console.log("user ====> ", user);
 
     res.status(200).send({
-      message: 'User created successfully',
+      message: "User created successfully",
       user,
-      token
+      token,
     });
-
-
   } catch (error) {
     res.status(404).send(error.message);
   }
 };
-
 
 exports.Login = async (req, res) => {
   const { email, password } = req.body;
