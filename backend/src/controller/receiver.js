@@ -6,7 +6,7 @@ const Item = require("../model/items");
 exports.getAllReceivers = async (req, res) => {
   try {
     const receivers = await Receiver.find({}).populate("items.item");
-    res.send({ receivers });
+    res.send(receivers);
   } catch (error) {
     res.status(404).send(error);
   }
@@ -30,8 +30,6 @@ exports.createReceiver = async (req, res) => {
     purpose,
     image,
     location,
-    materials,
-    items,
   } = req.body;
   const salt = await bcrypt.genSalt(10);
   const hashedPassword = await bcrypt.hash(password, salt);
@@ -51,8 +49,6 @@ exports.createReceiver = async (req, res) => {
       purpose,
       image,
       location,
-      materials,
-      items,
     });
 
     const token = jwt.sign(

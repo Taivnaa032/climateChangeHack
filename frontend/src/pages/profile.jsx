@@ -50,8 +50,6 @@ const Profile = () => {
     return <p>Loading...</p>;
   }
 
-  console.log(user);
-
   return (
     <div className="md:ml-52 mt-24 ml-[5%] mr-[5%] flex flex-col  md:flex-row gap-10">
       <div className="bg-slate-200 w-full md:w-1/3 flex  flex-col items-center rounded gap-4 break-words p-10 ">
