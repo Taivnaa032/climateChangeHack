@@ -8,6 +8,7 @@ const {
   deleteUser,
   getAllReceivers,
   addItems,
+  addMaterial,
 } = require("../controller/receiver");
 
 const receiverRouter = express.Router();
@@ -20,6 +21,7 @@ receiverRouter
   .put("/:id", updateUser)
   .get("/getToken", getUserDataByToken)
   .post("/addItems/:id", addItems)
+  .post("/addMaterial/:id", addMaterial)
   .delete("/:id", deleteUser);
 
 module.exports = receiverRouter;

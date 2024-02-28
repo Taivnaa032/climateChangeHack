@@ -5,10 +5,10 @@ const {
   updateUser,
   Login,
   getUserDataByToken,
-  getUserByItem,
   deleteUser,
   getAllUsers,
   addItems,
+  addMaterial,
 } = require("../controller/user");
 
 const userRouter = express.Router();
@@ -21,6 +21,7 @@ userRouter
   .delete("/:id", deleteUser)
   .post("/login", Login)
   .get("/getByToken", getUserDataByToken)
-  .post("/addItems/:id", addItems);
+  .post("/addItems/:id", addItems)
+  .post("/addMaterial/:id", addMaterial);
 
 module.exports = userRouter;

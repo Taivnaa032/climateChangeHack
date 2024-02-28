@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import instance from "@/lib/api";
 import Cookie from "js-cookie";
 import { useInput } from "@/hook/useInput";
+import { itemsOptions } from "./data/ItemOptions";
 
 const Modal = ({ isOpen, onClose, children }) => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -34,30 +35,6 @@ const Modal = ({ isOpen, onClose, children }) => {
       console.error("Error during adding item:", error);
     }
   };
-
-  const itemsOptions = [
-    "Food containers & lids",
-    "Bottles",
-    "Plant pots",
-    "Pill bottles ",
-    "Boxes & Cartons",
-    "Paper&Plastic cups",
-    "Newspaper & Damaged books",
-    "Flattened Cardboards ",
-    "Aluminum & Metal cans",
-    "Foll & Foll trays",
-    "Lids",
-    "Electronics",
-    "Aerosol spray cans (must be empty)",
-    "Jars",
-    "Jugs",
-    "Backpack",
-    "Fishing nets",
-    "Carpets",
-    "Wool",
-    "Cotton",
-    "Wood pulp fiber",
-  ];
 
   const handleSuggestionClick = (value) => {
     setSearchTerm(value);

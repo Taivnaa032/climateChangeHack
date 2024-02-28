@@ -9,6 +9,7 @@ const client = algoliasearch("8F370138HD", "50cc35cd9d0d70834d9d9e4dbaa6c335");
 const index = client.initIndex("items");
 
 import Modal from "../components/modal";
+import { MaterialAdd } from "@/components/MaterialAdd";
 
 // Add the Modal component here
 
@@ -17,6 +18,7 @@ const Profile = () => {
   const type = Cookie.get("type");
   const [user, setUser] = useState();
   const [loading, setLoading] = useState(true);
+  const [measure, setMeasure] = useState("have");
 
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -31,6 +33,10 @@ const Profile = () => {
         const { data } = await instance.get(`/${type}/${userId}`);
         setUser(data);
         setLoading(false);
+
+        if (type === "receivers") {
+          setMeasure("need");
+        }
       } catch (error) {
         console.error(error.message);
         setLoading(false);
@@ -68,6 +74,14 @@ const Profile = () => {
           <p className="text-2xl font-semibold">{user?.username}</p>
           <p className="text-slate-500 text-center">{user?.bio}</p>
         </div>
+        <p className="">Materials you {measure}: </p>
+        {user?.materials?.map((el) => (
+          <p className="text-lg text-black" key={el}>
+            {el}
+          </p>
+        ))}
+
+        <MaterialAdd />
       </div>
       <div className="w-1/4 bg-slate-300 rounded flex flex-col">
         <div className="w-full grid grid-cols-1 items-center">
