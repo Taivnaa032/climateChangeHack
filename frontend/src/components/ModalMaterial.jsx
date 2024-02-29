@@ -13,11 +13,11 @@ const ModalMaterial = ({ isOpen, onClose, children }) => {
   const addMaterial = async () => {
     console.log(material);
     try {
-      const { data } = await instance.post(`/${type}/addMaterial/${userId}`, {
+      await instance.post(`/${type}/addMaterial/${userId}`, {
         materials: [material],
       });
-
-      console.log(data);
+      onClose();
+      window.location.reload();
     } catch (error) {
       console.log(error);
     }

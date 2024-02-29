@@ -10,9 +10,7 @@ import axios from "axios";
 const AuthProvider = ({ children }) => {
   const router = useRouter();
 
-  const [auth, setAuth] = useState({ user: null, token: '' });
-
-
+  const [auth, setAuth] = useState({ user: null, token: "" });
 
   const accountOptions = ["User", "Receiver"];
 
@@ -28,13 +26,25 @@ const AuthProvider = ({ children }) => {
     accountType: "",
   });
 
+  const signOut = async () => {
+    Cookies.remove("token");
+    Cookies.remove("userId");
+    Cookies.remove("type");
+    Cookies.remove("username");
+    setUserInfo({
+      id: "",
+      type: "",
+    });
+    router.push("/login");
+  };
+
   const login = async () => {
     const type = formData.accountType === "User" ? "users" : "receivers";
     try {
       const { data } = await instance.post(`/${type}/login`, {
         email: formData.email,
         password: formData.password,
-  });
+      });
       toast.success("Succesfully logged in", {
         duration: 2000,
         iconTheme: {
@@ -53,9 +63,6 @@ const AuthProvider = ({ children }) => {
       Cookies.set("token", data.token);
       Cookies.set("userId", data.userId);
       Cookies.set("type", data.type);
-      setTimeout(() => {
-        router.push("/home");
-      }, 1000);
     } catch (error) {
       toast.error("Email or password is incorrect", {
         duration: 2000,
@@ -100,6 +107,7 @@ const AuthProvider = ({ children }) => {
         userInfo: userInfo,
         auth: auth,
         setAuth: setAuth,
+        signOut: signOut,
       }}
     >
       {children}

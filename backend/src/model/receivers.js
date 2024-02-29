@@ -8,8 +8,10 @@ const ItemSchema = new Schema({
     type: Schema.ObjectId,
     ref: "items",
   },
-  weight: { type: Number, default: 0 },
+  weight: { type: String, default: "0kg" },
   count: { type: Number, default: 0 },
+  free: { type: Boolean, default: false },
+  price: { type: Number },
 });
 
 const ReceiverSchema = new Schema({

@@ -24,7 +24,6 @@ export const Material = ({ type, userType }) => {
 
   const searchItems = async (id) => {
     const { data } = await instance.get(`/items/${userType}/${id}`);
-    console.log(data);
   };
 
   const hangman = () => {
