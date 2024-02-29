@@ -1,5 +1,6 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/router";
+import Cookie from "js-cookie";
 
 import algoliasearch from "algoliasearch";
 
@@ -9,14 +10,31 @@ const index = client.initIndex("items");
 const TopNavbar = () => {
   const router = useRouter();
 
+  const userType = Cookie.get("type");
+
   const [showAdditionalDiv, setShowAdditionalDiv] = useState(false);
   const [search, setSearch] = useState();
 
+  const searchRef = useRef(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (searchRef.current && !searchRef.current.contains(event.target)) {
+        setSearch([]);
+      }
+    };
+
+    document.addEventListener("click", handleClickOutside);
+
+    return () => {
+      document.removeEventListener("click", handleClickOutside);
+    };
+  }, []);
+
   const searchItems = async (event) => {
-    event.preventDefault(); // Move event.preventDefault() here
+    event.preventDefault();
     const searchedTitle = event.target.value;
 
-    // Ensure index is defined
     if (!index) {
       console.error("Index is not defined");
       return;
@@ -25,8 +43,7 @@ const TopNavbar = () => {
     await index
       .search(searchedTitle)
       .then(({ hits }) => {
-        console.log(hits);
-        // Update state or do something with the hits
+        setSearch(hits);
       })
       .catch((err) => {
         console.log(err);
@@ -39,6 +56,14 @@ const TopNavbar = () => {
 
   const handleCancelClick = () => {
     setShowAdditionalDiv(false);
+  };
+
+  const searchTheItemHolders = (el) => {
+    const uType = userType === "users" ? "receivers" : "users";
+    router.push({
+      pathname: "/search",
+      query: { item: el._id.$oid, userType: uType, itemName: el.title },
+    });
   };
 
   return (
@@ -133,13 +158,27 @@ const TopNavbar = () => {
             >
               <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0" />
             </svg>
-            <div className="flex flex-col w-1/4 relative">
+            <div className="flex flex-col w-1/4 relative" ref={searchRef}>
               <input
                 type="text"
                 placeholder="Search... "
                 onChange={searchItems}
-                className="w-72 p-2 ml-4 font-medium bg-inherit focus:outline-none bg-slate-100 rounded-3xl hover:placeholder-slate-400 placeholder-gray-500"
+                className="w-72 p-2 ml-4 font-medium bg-inherit focus:outline-none bg-slate-100  hover:placeholder-slate-400 placeholder-gray-500"
               />
+              {search?.map((el, i) => (
+                <button
+                  onClick={() => searchTheItemHolders(el)}
+                  key={i}
+                  className="text-start"
+                >
+                  <div
+                    key={i}
+                    className="w-72 p-2 ml-4 cursor-pointer bg-slate-100"
+                  >
+                    <p>{el.title}</p>
+                  </div>
+                </button>
+              ))}
             </div>
           </div>
 

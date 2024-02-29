@@ -23,15 +23,8 @@ exports.getReceiver = async (req, res) => {
 };
 
 exports.createReceiver = async (req, res) => {
-  const {
-    password,
-    email,
-    username,
-    purpose,
-    image,
-    location,
-    requests
-  } = req.body;
+  const { password, email, username, purpose, image, location, requests } =
+    req.body;
   const salt = await bcrypt.genSalt(10);
   const hashedPassword = await bcrypt.hash(password, salt);
 
@@ -50,7 +43,7 @@ exports.createReceiver = async (req, res) => {
       purpose,
       image,
       location,
-      requests
+      requests,
     });
 
     const token = jwt.sign(
@@ -94,7 +87,7 @@ exports.Login = async (req, res) => {
           type: "receivers",
           match,
           token,
-          receiverId: receiver._id,
+          userId: receiver._id,
           username: receiver.username,
         });
       } else {
@@ -112,7 +105,6 @@ exports.updateUser = async (req, res) => {
   const _id = req.params.id;
   const updateFields = req.body;
   console.log("updateFieldsReceiver", updateFields);
-
 
   try {
     const updatedUser = await Receiver.findByIdAndUpdate(_id, {
@@ -212,7 +204,6 @@ exports.addMaterial = async (req, res) => {
   }
 };
 
-
 exports.addRequest = async (req, res) => {
   try {
     const { requests } = req.body;
@@ -233,4 +224,4 @@ exports.addRequest = async (req, res) => {
   } catch (error) {
     res.status(500).send(error.message);
   }
-}
+};

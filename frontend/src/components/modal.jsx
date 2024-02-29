@@ -3,12 +3,15 @@ import instance from "@/lib/api";
 import Cookie from "js-cookie";
 import { useInput } from "@/hook/useInput";
 import { itemsOptions } from "./data/ItemOptions";
+import toast from "react-hot-toast";
 
 const Modal = ({ isOpen, onClose, children }) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [suggestions, setSuggestions] = useState([]);
-  const [weight, weightBind] = useInput();
-  const [count, countBind] = useInput();
+  const [weight, weightBind] = useInput(0);
+  const [count, countBind] = useInput(0);
+  const [price, setPrice] = useState("");
+  const [priceValue, priceBind] = useInput(0);
 
   const userId = Cookie.get("userId");
   const type = Cookie.get("type");
@@ -20,17 +23,31 @@ const Modal = ({ isOpen, onClose, children }) => {
     try {
       const { data } = await instance.get(`/items/title/${searchTerm}`);
 
-      const result = await instance.post(`/${type}/addItems/${userId}`, {
+      await instance.post(`/${type}/addItems/${userId}`, {
         items: [
           {
             item: data._id,
             weight,
             count,
+            free: !price,
+            price: priceValue,
           },
         ],
       });
 
-      console.log(result);
+      onClose();
+
+      toast.success("Item added", {
+        duration: 1000,
+        iconTheme: {
+          primary: "white",
+          secondary: "green",
+        },
+        style: {
+          background: "green",
+          color: "#fff",
+        },
+      });
     } catch (error) {
       console.error("Error during adding item:", error);
     }
@@ -51,12 +68,29 @@ const Modal = ({ isOpen, onClose, children }) => {
     );
   };
 
+  const getSelected = (el) => {
+    el.preventDefault();
+    if (type === "users") {
+      if (el.target.value === "Sell") {
+        setPrice(true);
+      } else {
+        setPrice(false);
+      }
+    } else {
+      if (el.target.value === "Buy") {
+        setPrice(true);
+      } else {
+        setPrice(false);
+      }
+    }
+  };
+
   return (
     <>
       {isOpen && (
         <div className="fixed inset-0 overflow-y-auto z-50 flex items-center justify-center">
           <div className="fixed inset-0 bg-black opacity-50"></div>
-          <div className="relative z-50 bg-white p-4 max-w-md mx-auto rounded-lg">
+          <div className="relative z-50 bg-white p-4  mx-auto rounded-lg">
             <button
               className="absolute top-2 right-2 text-gray-600 hover:text-gray-800"
               onClick={onClose}
@@ -81,7 +115,7 @@ const Modal = ({ isOpen, onClose, children }) => {
                       required
                       value={searchTerm}
                       onChange={handleSearchChange}
-                      className="form-control border-solid border-2"
+                      className="form-control border-solid border-2 max-w-4xl"
                       placeholder="Search items..."
                     />
                     {suggestions.length > 0 && (
@@ -97,19 +131,71 @@ const Modal = ({ isOpen, onClose, children }) => {
                         ))}
                       </ul>
                     )}
-
+                    <label
+                      htmlFor="items"
+                      className="block text-sm font-semibold text-[#7bbcb6]"
+                    >
+                      Count:(How many you {measure})
+                    </label>
                     <input
                       type="text"
                       {...countBind}
                       className="form-control border-solid border-2"
-                      placeholder={`How many ${searchTerm} you ${measure}`}
+                      placeholder={"Count"}
                     />
+                    <label
+                      htmlFor="items"
+                      className="block text-sm font-semibold text-[#7bbcb6]"
+                    >
+                      Weight:(How much)
+                    </label>
                     <input
                       type="text"
                       {...weightBind}
                       className="form-control border-solid border-2"
-                      placeholder={`How much ${searchTerm} you ${measure}`}
+                      placeholder={"Weight"}
                     />
+                    <label
+                      htmlFor="items"
+                      className="block text-sm font-semibold text-[#7bbcb6]"
+                    >
+                      {type === "users"
+                        ? "Do you want to Donate or Sell"
+                        : "Do you want Free Items or to Buy items"}
+                    </label>
+                    {type === "users" ? (
+                      <select
+                        className="border-solid border-2"
+                        onChange={(el) => getSelected(el)}
+                      >
+                        <option>Donate</option>
+                        <option>Sell</option>
+                      </select>
+                    ) : (
+                      <select
+                        className="border-solid border-2"
+                        onChange={(el) => getSelected(el)}
+                      >
+                        <option>Free Item</option>
+                        <option>Buy</option>
+                      </select>
+                    )}
+                    {price && (
+                      <>
+                        <label
+                          htmlFor="items"
+                          className="block text-sm font-semibold text-[#7bbcb6]"
+                        >
+                          Per item's price
+                        </label>
+                        <input
+                          type="text"
+                          {...priceBind}
+                          className="form-control border-solid border-2"
+                          placeholder={"Price"}
+                        />
+                      </>
+                    )}
                   </div>
                 </div>
                 <button
