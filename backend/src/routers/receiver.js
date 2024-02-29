@@ -9,6 +9,7 @@ const {
   getAllReceivers,
   addItems,
   addMaterial,
+  addRequest,
 } = require("../controller/receiver");
 
 const receiverRouter = express.Router();
@@ -22,6 +23,7 @@ receiverRouter
   .get("/getToken", getUserDataByToken)
   .post("/addItems/:id", addItems)
   .post("/addMaterial/:id", addMaterial)
+  .post("/addRequest/:id", addRequest)
   .delete("/:id", deleteUser);
 
 module.exports = receiverRouter;

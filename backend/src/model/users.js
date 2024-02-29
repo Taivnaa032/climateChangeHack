@@ -21,6 +21,7 @@ const UserSchema = new Schema({
   items: { type: [ItemSchema], default:[] },
   materials: { type: [String], default:[] },
   bio: { type: String, default: "" },
+  requests: {type: [String]},
   createdAt: { type: String, default: moment().format("MMMM Do YYYY") },
 });
 
