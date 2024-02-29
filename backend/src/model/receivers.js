@@ -21,6 +21,7 @@ const ReceiverSchema = new Schema({
   location: { type: String, default: "" },
   createdAt: { type: String, default: moment().format("MMMM Do YYYY") },
   materials: { type: [String], default: [] },
+  requests: {type: [String]},
   items: { type: [ItemSchema], default: [] },
 });
 

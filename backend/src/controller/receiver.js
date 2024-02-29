@@ -30,6 +30,7 @@ exports.createReceiver = async (req, res) => {
     purpose,
     image,
     location,
+    requests
   } = req.body;
   const salt = await bcrypt.genSalt(10);
   const hashedPassword = await bcrypt.hash(password, salt);
@@ -49,6 +50,7 @@ exports.createReceiver = async (req, res) => {
       purpose,
       image,
       location,
+      requests
     });
 
     const token = jwt.sign(
@@ -109,6 +111,8 @@ exports.Login = async (req, res) => {
 exports.updateUser = async (req, res) => {
   const _id = req.params.id;
   const updateFields = req.body;
+  console.log("updateFieldsReceiver", updateFields);
+
 
   try {
     const updatedUser = await Receiver.findByIdAndUpdate(_id, {
@@ -207,3 +211,26 @@ exports.addMaterial = async (req, res) => {
     res.status(500).send(error.message);
   }
 };
+
+
+exports.addRequest = async (req, res) => {
+  try {
+    const { requests } = req.body;
+    const _id = req.params.id;
+
+    const user = await Receiver.findById(_id);
+    if (!user) {
+      return res.status(404).send("Receiver not found");
+    }
+
+    const updatedUser = await Receiver.findByIdAndUpdate(
+      _id,
+      { $push: { requests: requests } },
+      { new: true }
+    );
+
+    res.status(200).send(updatedUser);
+  } catch (error) {
+    res.status(500).send(error.message);
+  }
+}

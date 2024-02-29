@@ -30,7 +30,7 @@ export const Material = ({ type, userType }) => {
   const hangman = () => {
     switch (materials?._id) {
       case "65d9cbae52894d7eae492384":
-        return Image2;
+        return Image2
       case "65d9cc2352894d7eae492385":
         return Image1;
       case "65d9cc3d52894d7eae492386":
@@ -46,12 +46,12 @@ export const Material = ({ type, userType }) => {
 
   return (
     <>
-      <div className="md:w-1/5 relative group py-2 flex flex-row">
+      <div className="md:w-1/5 relative group flex flex-row">
         <div className="w-full h-full  bg-cover flex flex-col items-center justify-center border border-gray-300 p-4 transition-all group-hover:border-slate-500">
-          <Image src={imageUrl} alt="Plastics" />
+          <Image src={imageUrl} alt="materials" />
           <p className="mt-2">{materials?.title}</p>
         </div>
-        <div className="hidden absolute pl-2 top-[-100] md:top-[20rem] w-full h-1/2 bg-gray-800 bg-opacity-75 justify-center items-center text-white group-hover:flex">
+        <div className="hidden absolute pl-2 top-[100]  w-full h-full bg-gray-800 bg-opacity-75 justify-center items-center text-white group-hover:flex">
           <ul className="flex flex-col items-start">
             {materials?.items?.map((item, i) => (
               <button key={i}>
@@ -61,6 +61,8 @@ export const Material = ({ type, userType }) => {
                 >
                   {item?.title}
                 </li>
+
+
               </button>
             ))}
           </ul>

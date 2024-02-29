@@ -1,14 +1,35 @@
 import React, { useEffect, useState } from "react";
 import Cookies from "js-cookie";
 import instance from "@/lib/api";
+import toast from "react-hot-toast"
 
 const Posts = () => {
     const [data, setData] = useState([]);
     const [showFullDescription, setShowFullDescription] = useState(false);
     const userType = Cookies.get("type");
+    const userId = Cookies.get("userId");
+    const reversedType = userType === "users" ? "receivers" : "users"
+
 
     const toggleDescription = () => {
         setShowFullDescription(!showFullDescription);
+    };
+
+    const handleSubmit = async (id) => {
+
+        console.log(id)
+
+        try {
+
+            await instance.post(`/${reversedType}/addRequest/${id}`,
+                { requests: [userId] }
+            )
+            toast.success("Sucessfully sent request")
+            console.log();
+        } catch (error) {
+            console.error(error);
+            toast.error("Error sending request")
+        }
     };
 
     useEffect(() => {
@@ -35,6 +56,7 @@ const Posts = () => {
 
     return (
         <div className="grid grid-cols-3 gap-5">
+
             {Array.isArray(data) &&
                 data.map((user, index) => (
                     <div key={index} className="flex flex-col bg-white p-4 rounded-lg shadow-md ">
@@ -51,10 +73,9 @@ const Posts = () => {
                         </p>
                         <p className="text-base text-gray-700 mb-2">Location: {user?.location}</p>
                         <div className="flex gap-x-1">
-
                             {
                                 user?.materials?.map((el, i) => (
-                                    <p className="text-base text-gray-700 mb-2 ml-5">{el}</p>
+                                    <p key={i} className="text-base text-gray-700 mb-2 ml-5">{el}</p>
                                 ))
                             }
                         </div>
@@ -84,7 +105,7 @@ const Posts = () => {
                                 </button>
                             )}
                             <br />
-                            <button type="button" className="mt-2 focus:outline-none text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800">REQUEST</button>
+                            <button onClick={() => handleSubmit(user?._id)} className="mt-2 focus:outline-none text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800">REQUEST {user?._id}</button>
                         </div>
                     </div>
                 ))}

@@ -29,9 +29,12 @@ const Home = () => {
           <Material type={el} key={i} userType={userType} />
         ))}
       </div>
-      <div className="grid grid-cols-4 gap-5">
+      <div className="mt-5">
+        <Posts />
       </div>
-      <Posts />
+      <div>
+
+      </div>
 
     </div>
   );
