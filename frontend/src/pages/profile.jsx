@@ -6,17 +6,15 @@ import PostUser from "@/components/post/postUser";
 import algoliasearch from "algoliasearch";
 import FileBase from "react-file-base64";
 import Modal from "../components/modal";
-import { MaterialAdd } from "@/components/MaterialAdd";
 import toast from "react-hot-toast";
 
 const client = algoliasearch("8F370138HD", "50cc35cd9d0d70834d9d9e4dbaa6c335");
 const index = client.initIndex("items");
 
-import Modal from "../components/modal";
 import { MaterialAdd } from "@/components/MaterialAdd";
 import { useAuth } from "@/context/Auth";
-
-// Add the Modal component here
+import { RealPost } from "@/components/post/RealPost";
+import { ItemPost } from "@/components/post/ItemPost";
 
 const Profile = () => {
   const { signOut } = useAuth();
@@ -24,12 +22,13 @@ const Profile = () => {
   const type = Cookie.get("type");
   const [user, setUser] = useState();
   const [loading, setLoading] = useState(true);
-  const [measure, setMeasure] = useState("have");
   const [formData, setFormData] = useState({
     image: "",
   });
 
   const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const measure = type === "users" ? "have" : "need";
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -68,10 +67,6 @@ const Profile = () => {
         console.log("data", data);
         setUser(data);
         setLoading(false);
-
-        if (type === "receivers") {
-          setMeasure("need");
-        }
       } catch (error) {
         console.error(error.message);
         setLoading(false);
@@ -113,10 +108,12 @@ const Profile = () => {
 
         <MaterialAdd />
       </div>
-      <div className="w-1/4 bg-slate-300 rounded flex flex-col">
-        <div className="w-full grid grid-cols-1 items-center">
-          Posts
-          {type === "users" ? <PostUser /> : <PostReceiver />}
+      <div className="w-1/4  rounded flex flex-col gap-5">
+        <p className="text-2xl">Items you {measure}</p>
+        <div className="w-full grid grid-cols-1 items-center gap-5">
+          {user?.items?.map((item, i) => (
+            <ItemPost itemValue={item} key={i} user={user} profile={true} />
+          ))}
         </div>
       </div>
 
@@ -128,7 +125,6 @@ const Profile = () => {
           >
             Add Item
           </button>
-          a
           <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
         </div>
         <button onClick={signOut}>Sign Out</button>

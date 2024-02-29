@@ -23,7 +23,7 @@ exports.getItemByTitle = async (req, res) => {
   try {
     const { title } = req.params;
     const item = await Item.find({ title });
-    res.status(200).send(item[0]);
+    res.status(200).send(item);
   } catch (error) {
     console.error("Error in getAllItems:", error);
     res.status(500).send({ error: "Internal Server Error" });

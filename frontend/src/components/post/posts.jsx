@@ -2,10 +2,13 @@ import React, { useEffect, useState } from "react";
 import Cookies from "js-cookie";
 import instance from "@/lib/api";
 import toast from "react-hot-toast";
+import { UserIcon } from "../UserIcon";
+import { ItemPost } from "./ItemPost";
 
 const Posts = () => {
   const [data, setData] = useState([]);
   const [showFullDescription, setShowFullDescription] = useState(false);
+  const [loading, setLoading] = useState(false);
   const userType = Cookies.get("type");
   const userId = Cookies.get("userId");
   const reversedType = userType === "users" ? "receivers" : "users";
@@ -29,6 +32,7 @@ const Posts = () => {
 
   useEffect(() => {
     const fetchData = async () => {
+      setLoading(true);
       try {
         let endpoint;
         if (userType === "users") {
@@ -38,78 +42,83 @@ const Posts = () => {
         }
         const response = await instance.get(endpoint);
         setData(response.data);
+        setLoading(false);
       } catch (error) {
         console.error("Error fetching data:", error.message);
+        setLoading(false);
       }
     };
     fetchData();
   }, [userType]);
 
   return (
-    <div className="grid grid-cols-3 gap-5">
-      {Array.isArray(data) &&
-        data.map((user, index) => (
-          <div
-            key={index}
-            className="flex flex-col bg-white p-4 rounded-lg shadow-md"
-          >
-            <div className="flex items-center mb-4">
-              <img
-                className="w-10 h-10 rounded-full mr-2"
-                src={user.Image}
-                alt={`${user?.username}'s profile`}
-              />
-              <p className="text-lg font-semibold text-black">
-                {user?.username}
-              </p>
-            </div>
-            <p className="text-base text-gray-700 mb-2">{user?.bio}</p>
-            <p className="text-base text-gray-700 mb-2">
-              Location: {user?.location}
-            </p>
-            <div className="flex gap-x-1">
-              {user?.materials?.map((el, i) => (
-                <p key={i} className="text-base text-gray-700 mb-2 ml-5">
-                  {el}
-                </p>
-              ))}
-            </div>
-            <div>
-              <p className="text-base text-gray-700 font-bold">Items:</p>
-              {showFullDescription
-                ? user?.items?.map((el, i) => (
-                    <div key={i}>
-                      <p>{el?.item?.title}</p>
-                      {el?.count !== 0 && <p>counts: {el?.count}</p>}
-                      {el?.weight !== 0 && <p>weight: {el?.weight}</p>}
-                    </div>
-                  ))
-                : user?.items?.slice(0, 2).map((el, i) => (
-                    <div key={i}>
-                      <p>{el?.item?.title}</p>
-                      {el?.count !== 0 && <p>counts: {el?.count}</p>}
-                      {el?.weight !== 0 && <p>weight: {el?.weight}</p>}
-                    </div>
-                  ))}
-              {user?.items?.length > 2 && (
-                <button
-                  onClick={toggleDescription}
-                  className="text-blue-500 hover:underline cursor-pointer"
-                >
-                  {showFullDescription ? "See Less" : "See More"}
-                </button>
-              )}
-              <br />
-              <button
-                onClick={() => handleSubmit(user?._id)}
-                className="mt-2 focus:outline-none text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800"
+    <>
+      {!loading ? (
+        <div className="grid grid-cols-3 gap-5 mb-10">
+          {data
+            .filter((el) => el.items.length > 0)
+            .map((user, index) => (
+              <div
+                key={index}
+                className="flex flex-col bg-white p-4 rounded-lg shadow-md gap-3"
               >
-                REQUEST {user?._id}
-              </button>
-            </div>
-          </div>
-        ))}
-    </div>
+                <div className="flex gap-5">
+                  <UserIcon image={user.image} username={user.username} />
+                  <p className="text-lg font-semibold">{user.username}</p>
+                  <p className="text-lg">{user.email}</p>
+                </div>
+                <p className="text-base text-gray-700 mb-2">{user.bio}</p>
+                <p className="text-base text-gray-700 mb-2">
+                  Location: {user.location}
+                </p>
+                <div className="flex gap-x-1">
+                  <p>Materials: </p>
+                  {user.materials.map((material, i) => (
+                    <p key={i} className="text-base text-gray-700 mb-2 ml-5">
+                      {material}
+                    </p>
+                  ))}
+                </div>
+                <div className="flex flex-col gap-10">
+                  <p className="text-base text-gray-700 font-bold">Items:</p>
+                  {showFullDescription
+                    ? user.items.map((el, i) => (
+                        <ItemPost
+                          key={i}
+                          itemValue={el}
+                          user={user}
+                          profile={false}
+                          homePost={true}
+                          handleSubmit={() => handleSubmit(user._id)}
+                        />
+                      ))
+                    : user.items
+                        .slice(0, 2)
+                        .map((el, i) => (
+                          <ItemPost
+                            key={i}
+                            itemValue={el}
+                            user={user}
+                            profile={false}
+                            homePost={true}
+                          />
+                        ))}
+                  {user.items.length > 2 && (
+                    <button
+                      onClick={toggleDescription}
+                      className="text-blue-500 hover:underline cursor-pointer"
+                    >
+                      {showFullDescription ? "See Less" : "See More"}
+                    </button>
+                  )}
+                </div>
+              </div>
+            ))}
+        </div>
+      ) : (
+        <div className="animate-pulse bg-gray-200 rounded-lg h-32 w-full"></div>
+      )}
+    </>
   );
 };
 

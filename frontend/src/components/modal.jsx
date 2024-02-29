@@ -12,6 +12,7 @@ const Modal = ({ isOpen, onClose, children }) => {
   const [count, countBind] = useInput(0);
   const [price, setPrice] = useState("");
   const [priceValue, priceBind] = useInput(0);
+  const [loading, setLoading] = useState(false);
 
   const userId = Cookie.get("userId");
   const type = Cookie.get("type");
@@ -21,12 +22,13 @@ const Modal = ({ isOpen, onClose, children }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
+      setLoading(true);
       const { data } = await instance.get(`/items/title/${searchTerm}`);
 
       await instance.post(`/${type}/addItems/${userId}`, {
         items: [
           {
-            item: data._id,
+            item: data[0]._id,
             weight,
             count,
             free: !price,
@@ -34,6 +36,10 @@ const Modal = ({ isOpen, onClose, children }) => {
           },
         ],
       });
+
+      setLoading(false);
+
+      window.location.reload();
 
       onClose();
 
@@ -202,7 +208,7 @@ const Modal = ({ isOpen, onClose, children }) => {
                   type="submit"
                   className="bg-green-600 py-1 px-7 rounded-2xl text-white"
                 >
-                  ADD
+                  {loading ? "Loading..." : "ADD"}
                 </button>
               </form>
             </div>

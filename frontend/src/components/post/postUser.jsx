@@ -9,7 +9,7 @@ const PostUser = () => {
 
   const [caption, setCaption] = useState(initialCaption.slice(0, maxLength));
   return (
-    <div className="bg-slate-200 rounded mt-10 w-full gap-2 flex flex-col p-3 ">
+    <div className="bg-slate-200 rounded w-full gap-2 flex flex-col p-3 ">
       <div className="flex flex-row items-center gap-2">
         <UserIcon />
         <p className=""> User</p>

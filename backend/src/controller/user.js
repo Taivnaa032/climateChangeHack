@@ -83,11 +83,12 @@ exports.getUserByItem = async (req, res) => {
 };
 
 exports.createUser = async (req, res) => {
-  const { password, email, username, location, image, bio, requests } = req.body;
+  const { password, email, username, location, image, bio, requests } =
+    req.body;
   const salt = await bcrypt.genSalt(10);
   const hashedPassword = await bcrypt.hash(password, salt);
 
-  console.log(req.body)
+  console.log(req.body);
   try {
     //existing user
     const existingUser = await User.findOne({ email });
@@ -104,10 +105,8 @@ exports.createUser = async (req, res) => {
       location,
       image,
       bio,
-      requests
+      requests,
     });
-
-    console.log(user)
 
     const token = jwt.sign(
       {
@@ -165,7 +164,6 @@ exports.Login = async (req, res) => {
 exports.updateUser = async (req, res) => {
   const _id = req.params.id;
   const updateFields = req.body;
-  console.log("updateFieldsUser", updateFields);
   const { items } = req.body;
 
   try {
@@ -223,9 +221,3 @@ exports.deleteUser = async (req, res) => {
     res.status(404).send(error);
   }
 };
-
-
-
-
-
-

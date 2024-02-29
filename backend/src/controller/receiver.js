@@ -55,7 +55,6 @@ exports.createReceiver = async (req, res) => {
       { expiresIn: "24h" }
     );
 
-    console.log("receiver ====> ", receiver);
     const data = {
       message: "User created successfully",
       receiver,
@@ -104,7 +103,6 @@ exports.Login = async (req, res) => {
 exports.updateUser = async (req, res) => {
   const _id = req.params.id;
   const updateFields = req.body;
-  console.log("updateFieldsReceiver", updateFields);
 
   try {
     const updatedUser = await Receiver.findByIdAndUpdate(_id, {
