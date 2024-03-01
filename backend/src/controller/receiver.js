@@ -2,10 +2,11 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const Receiver = require("../model/receivers");
 const Item = require("../model/items");
+const User = require("../model/users");
 
 exports.getAllReceivers = async (req, res) => {
   try {
-    const receivers = await Receiver.find({}).populate("items.item");
+    const receivers = await Receiver.find({}).populate("items.item").populate("requests.user");
     res.send(receivers);
   } catch (error) {
     res.status(404).send(error);
@@ -15,7 +16,7 @@ exports.getAllReceivers = async (req, res) => {
 exports.getReceiver = async (req, res) => {
   try {
     const _id = req.params.id;
-    const receiver = await Receiver.findById({ _id }).populate("items.item");
+    const receiver = await Receiver.findById({ _id }).populate("items.item").populate("requests.user");
     res.send(receiver);
   } catch (error) {
     res.send(error);
@@ -214,11 +215,18 @@ exports.addRequest = async (req, res) => {
 
     const updatedUser = await Receiver.findByIdAndUpdate(
       _id,
-      { $push: { requests: requests } },
+      { $push: { requests: {$each : requests[0]} } },
       { new: true }
     );
 
-    res.status(200).send(updatedUser);
+
+    const updatedReceiver = await User.findByIdAndUpdate(
+      {_id: requests[0]},
+      { $push: { requests: {$each : requests[1]} } },
+      { new: true }
+    );
+
+    res.status(200).send(updatedReceiver);
   } catch (error) {
     res.status(500).send(error.message);
   }

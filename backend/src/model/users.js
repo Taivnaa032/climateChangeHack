@@ -14,6 +14,17 @@ const ItemSchema = new Schema({
   price: { type: Number },
 });
 
+const ReceiverSchema = new Schema({
+  user: {
+    type: Schema.ObjectId,
+    ref: "receivers",
+  },
+  sent: { type: Boolean },
+  got: { type: Boolean }
+
+});
+
+
 const UserSchema = new Schema({
   image: { type: String, default: "" },
   username: { type: String, required: true },
@@ -23,7 +34,7 @@ const UserSchema = new Schema({
   items: { type: [ItemSchema], default: [] },
   materials: { type: [String], default: [] },
   bio: { type: String, default: "" },
-  requests: {type: [String]},
+  requests: { type: [ReceiverSchema] },
   createdAt: { type: String, default: moment().format("MMMM Do YYYY") },
 });
 

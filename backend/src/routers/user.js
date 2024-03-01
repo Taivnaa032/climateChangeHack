@@ -9,6 +9,7 @@ const {
   getAllUsers,
   addItems,
   addMaterial,
+  addRequest
 } = require("../controller/user");
 
 const userRouter = express.Router();
@@ -22,6 +23,7 @@ userRouter
   .post("/login", Login)
   .get("/getByToken", getUserDataByToken)
   .post("/addItems/:id", addItems)
+  .post("/addRequest/:id", addRequest)
   .post("/addMaterial/:id", addMaterial);
-
+  
 module.exports = userRouter;
