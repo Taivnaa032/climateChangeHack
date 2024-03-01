@@ -9,12 +9,14 @@ const {
   getAllUsers,
   addItems,
   addMaterial,
-  addRequest
+  addRequest,
+  showNotifications,
 } = require("../controller/user");
 
 const userRouter = express.Router();
 
 userRouter
+  .get("/requests/:id", showNotifications)
   .get("/all", getAllUsers)
   .get("/:id", getUser)
   .post("/create", createUser)
@@ -25,5 +27,5 @@ userRouter
   .post("/addItems/:id", addItems)
   .post("/addRequest/:id", addRequest)
   .post("/addMaterial/:id", addMaterial);
-  
+
 module.exports = userRouter;

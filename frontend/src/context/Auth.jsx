@@ -63,6 +63,7 @@ const AuthProvider = ({ children }) => {
       Cookies.set("token", data.token);
       Cookies.set("userId", data.userId);
       Cookies.set("type", data.type);
+      router.push("/");
     } catch (error) {
       toast.error("Email or password is incorrect", {
         duration: 2000,

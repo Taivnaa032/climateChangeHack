@@ -16,7 +16,9 @@ exports.getAllReceivers = async (req, res) => {
 exports.getReceiver = async (req, res) => {
   try {
     const _id = req.params.id;
-    const receiver = await Receiver.findById({ _id }).populate("items.item").populate("requests.user");
+    const receiver = await Receiver.findById({ _id })
+      .populate("items.item")
+      .populate("requests.user");
     res.send(receiver);
   } catch (error) {
     res.send(error);
@@ -213,21 +215,32 @@ exports.addRequest = async (req, res) => {
       return res.status(404).send("Receiver not found");
     }
 
-    const updatedUser = await Receiver.findByIdAndUpdate(
+    const updatedReceiver = await Receiver.findByIdAndUpdate(
       _id,
-      { $push: { requests: { $each: requests[0] } } },
+      { $push: { requests: { $each: [requests[0]] } } },
       { new: true }
     );
 
-
-    const updatedReceiver = await User.findByIdAndUpdate(
-      { _id: requests[0] },
-      { $push: { requests: { $each: requests[1] } } },
+    const updatedUser = await User.findByIdAndUpdate(
+      { _id: requests[0].user },
+      { $push: { requests: { $each: [requests[1]] } } },
       { new: true }
     );
 
     res.status(200).send(updatedReceiver);
   } catch (error) {
     res.status(500).send(error.message);
+  }
+};
+
+exports.showNotifications = async (req, res) => {
+  const _id = req.params.id;
+  try {
+    const user = await Receiver.find({ _id })
+      .populate("requests.user")
+      .populate("items.item");
+    res.status(200).send(user);
+  } catch (error) {
+    res.status(404).send(error.message);
   }
 };

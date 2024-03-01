@@ -10,11 +10,13 @@ const {
   addItems,
   addMaterial,
   addRequest,
+  showNotifications,
 } = require("../controller/receiver");
 
 const receiverRouter = express.Router();
 
 receiverRouter
+  .get("/requests/:id", showNotifications)
   .get("/all", getAllReceivers)
   .get("/:id", getReceiver)
   .post("/create", createReceiver)

@@ -19,6 +19,16 @@ exports.getAllItems = async (req, res) => {
   }
 };
 
+exports.getId = async (req, res) => {
+  const _id = req.params.id;
+  try {
+    const item = await Item.findById({ _id });
+    res.status(200).send(item);
+  } catch (error) {
+    res.status(404).send({ error: "Internal Server Error" });
+  }
+};
+
 exports.getItemByTitle = async (req, res) => {
   try {
     const { title } = req.params;

@@ -2,14 +2,9 @@ import Cookies from "js-cookie";
 import { useState } from "react";
 import { UserIcon } from "../UserIcon";
 import instance from "@/lib/api";
-import toast from "react-hot-toast"
+import toast from "react-hot-toast";
 
-export const ItemPost = ({
-  itemValue,
-  user,
-  profile,
-  homePost
-}) => {
+export const ItemPost = ({ itemValue, user, profile, homePost }) => {
   const userType = Cookies.get("type");
   const userId = Cookies.get("userId");
   const reversedType = userType === "users" ? "receivers" : "users";
@@ -17,20 +12,28 @@ export const ItemPost = ({
     userType === "users" ? ["Donate", "Sell"] : ["Request", "Buy"];
 
   const handleSubmit = async (id) => {
+    console.log(reversedType);
     try {
-      await instance.post(`/${reversedType}/addRequest/${id}`, {
-        requests: [
-          {
-            user: userId,
-            sent: true
-          },
-          {
-            user: id,
-            sent: false
-          }
-        ],
-
-      });
+      const { data } = await instance.post(
+        `/${reversedType}/addRequest/${id}`,
+        {
+          requests: [
+            {
+              user: userId,
+              sent: true,
+              item: itemValue._id,
+              free: itemValue?.free,
+              count: itemValue?.count,
+              weight: itemValue?.weight,
+            },
+            {
+              user: id,
+              sent: false,
+            },
+          ],
+        }
+      );
+      console.log(data);
       toast.success("Successfully sent request");
     } catch (error) {
       console.error(error);

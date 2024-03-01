@@ -10,7 +10,6 @@ const LogIn = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     login();
-    router.push("/")
   };
 
   return (
@@ -46,7 +45,6 @@ const LogIn = () => {
             <div className="mb-4"></div>
 
             <div className="mb-4">
-
               <label
                 htmlFor="email"
                 className="block text-sm font-semibold text-[#7bbcb6]"

@@ -17,8 +17,8 @@ exports.getAllUsers = async (req, res) => {
 exports.getUser = async (req, res) => {
   try {
     const _id = req.params.id;
-    const user = await User.findById({ _id }).populate("items.item").populate("requests.user");
-    res.send(user);
+    const user = await User.findById({ _id });
+    res.status(200).send(user);
   } catch (error) {
     res.send(error);
   }
@@ -235,17 +235,15 @@ exports.addRequest = async (req, res) => {
 
     const updatedUser = await User.findByIdAndUpdate(
       _id,
-      { $push: { requests: requests[0] } },
+      { $push: { requests: { $each: [requests[0]] } } },
       { new: true }
     );
 
     const updatedReceiver = await Receiver.findByIdAndUpdate(
       { _id: requests[0].user },
-      { $push: { requests: requests[1] } },
+      { $push: { requests: { $each: [requests[1]] } } },
       { new: true }
     );
-
-
 
     res.status(200).send(updatedUser);
   } catch (error) {
@@ -260,5 +258,17 @@ exports.getRequestedUser = async (req, res) => {
     res.send(user);
   } catch (error) {
     res.send(error);
+  }
+};
+
+exports.showNotifications = async (req, res) => {
+  const _id = req.params.id;
+  try {
+    const user = await User.find({ _id })
+      .populate("requests.user")
+      .populate("items.item");
+    res.status(200).send(user);
+  } catch (error) {
+    res.status(404).send(error.message);
   }
 };

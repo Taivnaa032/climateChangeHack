@@ -20,10 +20,13 @@ const ReceiverSchema = new Schema({
     ref: "receivers",
   },
   sent: { type: Boolean },
-  got: { type: Boolean }
-
+  got: { type: Boolean },
+  item: { type: String },
+  price: { type: Number },
+  weight: { type: String },
+  count: { type: Number },
+  free: { type: Boolean },
 });
-
 
 const UserSchema = new Schema({
   image: { type: String, default: "" },

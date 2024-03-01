@@ -20,7 +20,12 @@ const UserSchema = new Schema({
     ref: "users",
   },
   sent: { type: Boolean },
-  got:{type: Boolean, default: false}
+  got: { type: Boolean, default: false },
+  item: { type: String },
+  price: { type: Number },
+  weight: { type: String },
+  count: { type: Number },
+  free: { type: Boolean },
 });
 
 const ReceiverSchema = new Schema({
@@ -32,8 +37,8 @@ const ReceiverSchema = new Schema({
   location: { type: String, default: "" },
   createdAt: { type: String, default: moment().format("MMMM Do YYYY") },
   materials: { type: [String], default: [] },
-  requests: {type: [UserSchema]},
-  items: { type: [ItemSchema], default: [] },
+  requests: { type: [UserSchema] },
+  items: { type: [ItemSchema] },
 });
 
 const Receiver = mongoose.model("receivers", ReceiverSchema);
