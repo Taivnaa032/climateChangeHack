@@ -59,4 +59,29 @@ const Requests = () => {
   );
 };
 
+<<<<<<< HEAD
 export default Requests;
+=======
+    return (
+        <div className='md:ml-52 mt-24 ml-[5%] mr-[5%] '>
+            {Array.isArray(user?.requests) && user?.requests.map((request, index) => (
+                <div key={index}>
+                    <img
+                        className="w-10 h-10 rounded-full mr-2"
+                        src={request?.user?.image}
+                        alt={`${request?.user?.username}'s profile`}
+                    />
+                    <p>Username: {request?.user?.username}</p>
+                    <p>Email: {request?.user?.email}</p>
+
+                   
+
+                </div>
+            ))}
+        </div>
+    );
+
+}
+
+export default Requests  
+>>>>>>> 243c176 (adsfas)
