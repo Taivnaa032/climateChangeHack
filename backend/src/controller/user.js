@@ -3,10 +3,11 @@ const jwt = require("jsonwebtoken");
 const Posts = require("../model/posts");
 const User = require("../model/users");
 const Item = require("../model/items");
+const Receiver = require("../model/receivers");
 
 exports.getAllUsers = async (req, res) => {
   try {
-    const users = await User.find({}).populate("items.item");
+    const users = await User.find({}).populate("items.item").populate("requests.user");
     res.status(200).json(users);
   } catch (error) {
     res.status(404).send(error);
@@ -16,7 +17,7 @@ exports.getAllUsers = async (req, res) => {
 exports.getUser = async (req, res) => {
   try {
     const _id = req.params.id;
-    const user = await User.findById({ _id }).populate("items.item");
+    const user = await User.findById({ _id }).populate("items.item").populate("requests.user");
     res.send(user);
   } catch (error) {
     res.send(error);
@@ -219,5 +220,45 @@ exports.deleteUser = async (req, res) => {
     res.status(200).send(user);
   } catch (error) {
     res.status(404).send(error);
+  }
+};
+
+exports.addRequest = async (req, res) => {
+  try {
+    const { requests } = req.body;
+    const _id = req.params.id;
+
+    const user = await User.findById(_id);
+    if (!user) {
+      return res.status(404).send("Receiver not found");
+    }
+
+    const updatedUser = await User.findByIdAndUpdate(
+      _id,
+      { $push: { requests: requests[0] } },
+      { new: true }
+    );
+
+    const updatedReceiver = await Receiver.findByIdAndUpdate(
+      { _id: requests[0].user },
+      { $push: { requests: requests[1] } },
+      { new: true }
+    );
+
+
+
+    res.status(200).send(updatedUser);
+  } catch (error) {
+    res.status(500).send(error.message);
+  }
+};
+
+exports.getRequestedUser = async (req, res) => {
+  try {
+    const _id = req.params.id;
+    const user = await User.findById({ _id }).populate("items.item");
+    res.send(user);
+  } catch (error) {
+    res.send(error);
   }
 };
