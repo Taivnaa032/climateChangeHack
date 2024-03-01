@@ -6,7 +6,7 @@ const User = require("../model/users");
 
 exports.getAllReceivers = async (req, res) => {
   try {
-    const receivers = await Receiver.find({}).populate("items.item").populate("requests.user");
+    const receivers = await Receiver.find({}).populate("items.item");
     res.send(receivers);
   } catch (error) {
     res.status(404).send(error);
@@ -215,14 +215,14 @@ exports.addRequest = async (req, res) => {
 
     const updatedUser = await Receiver.findByIdAndUpdate(
       _id,
-      { $push: { requests: {$each : requests[0]} } },
+      { $push: { requests: { $each: requests[0] } } },
       { new: true }
     );
 
 
     const updatedReceiver = await User.findByIdAndUpdate(
-      {_id: requests[0]},
-      { $push: { requests: {$each : requests[1]} } },
+      { _id: requests[0] },
+      { $push: { requests: { $each: requests[1] } } },
       { new: true }
     );
 

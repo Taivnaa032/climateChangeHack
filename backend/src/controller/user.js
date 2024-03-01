@@ -7,7 +7,7 @@ const Receiver = require("../model/receivers");
 
 exports.getAllUsers = async (req, res) => {
   try {
-    const users = await User.find({}).populate("items.item").populate("requests.user");
+    const users = await User.find({}).populate("items.item");
     res.status(200).json(users);
   } catch (error) {
     res.status(404).send(error);
