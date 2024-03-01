@@ -3,85 +3,48 @@ import instance from "@/lib/api";
 import Cookie from "js-cookie";
 import toast from "react-hot-toast";
 import { Notification } from "@/components/Notification";
+import { UserIcon } from "@/components/UserIcon";
 
 const Requests = () => {
-  const [info, setInfo] = useState(null);
+    const [info, setInfo] = useState(null);
 
-  const userId = Cookie.get("userId");
-  const type = Cookie.get("type");
+    const userId = Cookie.get("userId");
+    const type = Cookie.get("type");
 
-  const handleSubmit = async (id) => {
-    console.log(id);
-    try {
-      const requestBody = {
-        got: false,
-        gave: false,
-      };
+    useEffect(() => {
+        const getUserInfo = async () => {
+            try {
+                const { data } = await instance.get(`/${type}/${userId}`);
+                setInfo(data);
+            } catch (error) {
+                console.error(error.message);
+            }
+        };
 
-      if (type === "users") {
-        requestBody.got = true;
-      }
+        getUserInfo();
+    }, [userId, type]);
 
-      if (type === "receivers") {
-        requestBody.gave = true;
-      }
-
-      await instance.put(`/${type}/${id}`, {
-        requests: [requestBody],
-      });
-      toast.success("Successfully submitted");
-    } catch (error) {
-      console.error(error);
-      toast.error("Error sending request");
-    }
-  };
-
-  useEffect(() => {
-    const getUserInfo = async () => {
-      try {
-        const { data } = await instance.get(`/${type}/${userId}`);
-        setInfo(data);
-      } catch (error) {
-        console.error(error.message);
-      }
-    };
-
-    getUserInfo();
-  }, [userId, type]);
-
-  return (
-    <div className="md:ml-52 mt-24 ml-[5%] mr-[5%] ">
-      <div className="flex flex-col gap-5">
-        {Array.isArray(info?.requests) &&
-          info?.requests?.map((req, i) => <Notification req={req} key={i} />)}
-      </div>
-    </div>
-  );
-};
-
-<<<<<<< HEAD
-export default Requests;
-=======
     return (
-        <div className='md:ml-52 mt-24 ml-[5%] mr-[5%] '>
-            {Array.isArray(user?.requests) && user?.requests.map((request, index) => (
-                <div key={index}>
-                    <img
-                        className="w-10 h-10 rounded-full mr-2"
-                        src={request?.user?.image}
-                        alt={`${request?.user?.username}'s profile`}
-                    />
-                    <p>Username: {request?.user?.username}</p>
-                    <p>Email: {request?.user?.email}</p>
+        <div className="md:ml-52 mt-24 ml-[5%] mr-[5%] ">
+            <div className="flex flex-col gap-5">
+                <div className='md:ml-52 mt-24 ml-[5%] mr-[5%] '>
+                    {Array.isArray(info?.requests) && info?.requests.map((request, index) => (
+                        <div key={index}>
 
-                   
+                            <UserIcon />
+                            <p>Username: {request?.user?.username}</p>
+                            <p>Email: {request?.user?.email}</p>
 
+
+
+                        </div>
+                    ))}
                 </div>
-            ))}
+
+
+            </div>
         </div>
     );
+};
 
-}
-
-export default Requests  
->>>>>>> 243c176 (adsfas)
+export default Requests;
