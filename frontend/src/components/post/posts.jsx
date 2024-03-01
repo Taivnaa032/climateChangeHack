@@ -30,6 +30,7 @@ const Posts = () => {
                 }
                 const response = await instance.get(endpoint);
                 setData(response.data);
+                console.log(response.data);
                 setLoading(false);
             } catch (error) {
                 console.error("Error fetching data:", error.message);
@@ -39,29 +40,6 @@ const Posts = () => {
         fetchData();
 
     }, []);
-
-    const handleSubmit = async (id) => {
-        console.log(id);
-        try {
-            await instance.post(`/${reversedType}/addRequest/${id}`, {
-                requests: [
-                    {
-                        user: userId,
-                        sent: true
-                    },
-                    {
-                        user: id,
-                        sent: false
-                    }
-                ],
-
-            });
-            toast.success("Successfully sent request");
-        } catch (error) {
-            console.error(error);
-            toast.error("Error sending request");
-        }
-    };
 
     return (
         <>
@@ -101,7 +79,7 @@ const Posts = () => {
                                                 user={user}
                                                 profile={false}
                                                 homePost={true}
-                                                handleSubmit={() => handleSubmit(user._id)}
+
                                             />
                                         ))
                                         : user.items

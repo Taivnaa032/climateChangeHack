@@ -134,7 +134,7 @@ exports.searchReceiversByMaterial = async (req, res) => {
     const receivers = await Receiver.find({ materials });
     res.status(200).send(receivers);
   } catch (err) {
-    req.status(404).send(err);
+    res.status(404).send(err);
   }
 };
 

@@ -1,17 +1,42 @@
 import Cookies from "js-cookie";
 import { useState } from "react";
 import { UserIcon } from "../UserIcon";
+import instance from "@/lib/api";
+import toast from "react-hot-toast"
 
 export const ItemPost = ({
   itemValue,
   user,
   profile,
-  homePost,
-  handleSubmit,
+  homePost
 }) => {
   const userType = Cookies.get("type");
+  const userId = Cookies.get("userId");
+  const reversedType = userType === "users" ? "receivers" : "users";
   const message =
     userType === "users" ? ["Donate", "Sell"] : ["Request", "Buy"];
+
+  const handleSubmit = async (id) => {
+    try {
+      await instance.post(`/${reversedType}/addRequest/${id}`, {
+        requests: [
+          {
+            user: userId,
+            sent: true
+          },
+          {
+            user: id,
+            sent: false
+          }
+        ],
+
+      });
+      toast.success("Successfully sent request");
+    } catch (error) {
+      console.error(error);
+      toast.error("Error sending request");
+    }
+  };
   return (
     <div className="flex flex-col bg-white p-4 rounded-lg shadow-md ">
       {!homePost && (
@@ -59,8 +84,8 @@ export const ItemPost = ({
           {itemValue?.weight != 0 && (
             <p>weight: {itemValue?.weight != 0 && itemValue?.weight} </p>
           )}
-          {itemValue?.price != 0 && (
-            <p>price: {itemValue?.price > 0 && itemValue?.price}$ </p>
+          {itemValue?.price > 0 && (
+            <p>price: {itemValue?.price != 0 && itemValue?.price}$ </p>
           )}
         </div>
         <br />
@@ -75,6 +100,7 @@ export const ItemPost = ({
           <button
             type="button"
             className="mt-2 focus:outline-none text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800"
+            onClick={() => handleSubmit(user?._id)}
           >
             {itemValue?.free ? message[0] : message[1]}
           </button>
