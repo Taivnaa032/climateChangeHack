@@ -26,6 +26,7 @@ const ReceiverSchema = new Schema({
   weight: { type: String },
   count: { type: Number },
   free: { type: Boolean },
+  read: { type: Boolean, default:false },
 });
 
 const UserSchema = new Schema({

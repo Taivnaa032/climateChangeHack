@@ -1,4 +1,6 @@
 const express = require("express");
+const receiverRouter = express.Router();
+
 const {
   getReceiver,
   createReceiver,
@@ -10,10 +12,10 @@ const {
   addItems,
   addMaterial,
   addRequest,
+  updateRequest,
   showNotifications,
 } = require("../controller/receiver");
 
-const receiverRouter = express.Router();
 
 receiverRouter
   .get("/requests/:id", showNotifications)
@@ -22,6 +24,7 @@ receiverRouter
   .post("/create", createReceiver)
   .post("/login", Login)
   .put("/:id", updateUser)
+  .put("/updateRequest/:id", updateRequest) 
   .get("/getToken", getUserDataByToken)
   .post("/addItems/:id", addItems)
   .post("/addMaterial/:id", addMaterial)

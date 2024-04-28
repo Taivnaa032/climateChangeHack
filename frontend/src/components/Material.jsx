@@ -39,10 +39,10 @@ export const Material = ({ type, userType }) => {
 
   const hangman = () => {
     switch (materials?._id) {
-      case "65d9cbae52894d7eae492384":
-        return Image2;
       case "65d9cc2352894d7eae492385":
         return Image1;
+      case "65d9cbae52894d7eae492384":
+        return Image2;
       case "65d9cc3d52894d7eae492386":
         return Image3;
       case "65d9cc6852894d7eae492387":

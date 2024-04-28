@@ -68,7 +68,7 @@ const TopNavbar = () => {
 
   return (
     <>
-      <div className="fixed md:left-[7rem] h-16 w-full md:w-[93.4%] shadow-xl bg-[#98e4d9] top-0 z-10">
+      <div className="fixed md:left-[7rem] h-16 w-full md:w-[93.4%] shadow-xl bg-white top-0 z-10">
         <div className="flex flex-row md:ml-10 justify-between mt-2 px-5">
           <div className="flex flex-row mt-1 ">
             <div className="block md:hidden mr-10 ml-4">
@@ -153,7 +153,7 @@ const TopNavbar = () => {
               width="30"
               height="40"
               fill="currentColor"
-              className="bi bi-search text-emerald-800"
+              className="bi bi-search text-[#072A40]"
               viewBox="0 0 16 16"
             >
               <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0" />
@@ -161,9 +161,9 @@ const TopNavbar = () => {
             <div className="flex flex-col w-1/4 relative" ref={searchRef}>
               <input
                 type="text"
-                placeholder="Search... "
+                placeholder="Search items"
                 onChange={searchItems}
-                className="w-72 p-2 ml-4 font-medium bg-inherit focus:outline-none bg-slate-100  hover:placeholder-slate-400 placeholder-gray-500"
+                className="w-72 p-2 ml-4 font-medium bg-inherit focus:outline-none bg-slate-50 rounded-lg  hover:placeholder-slate-400 placeholder-gray-500"
               />
               {search?.map((el, i) => (
                 <button
@@ -189,7 +189,7 @@ const TopNavbar = () => {
               width="46"
               height="46"
               fill="currentColor"
-              className="bi bi-person-circle mr-2 text-white cursor-pointer"
+              className="bi bi-person-circle mr-2 text-[#072A40] cursor-pointer"
               viewBox="0 0 16 16"
             >
               <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0" />

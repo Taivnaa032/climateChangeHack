@@ -93,7 +93,9 @@ const Profile = () => {
                 setFormData({ ...formData, image: base64 })
               }
             />
-            <button type="submit">add</button>
+            <br />
+            <button className="bg-green-500 text-white p-2 rounded hover:bg-green-700" type="submit">
+              Add your picture</button>
           </form>
           <img className="w-40 h-56" src={user?.image} alt="Cover" />
           <p className="text-2xl font-semibold">{user?.username}</p>

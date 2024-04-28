@@ -233,6 +233,29 @@ exports.addRequest = async (req, res) => {
   }
 };
 
+exports.updateRequest = async (req, res) => {
+  try {
+    const { requests } = req.body;
+    const _id = req.params.id;
+
+    const user = await Receiver.findById(_id);
+    if (!user) {
+      return res.status(404).send("Receiver not found");
+    }
+
+    const updatedReceiver = await Receiver.findByIdAndUpdate(
+      _id,
+      { $set: { requests: requests } },
+      { new: true }
+    );
+
+    res.status(200).send(updatedReceiver);
+  } catch (error) {
+    res.status(500).send(error.message);
+  }
+};
+
+
 exports.showNotifications = async (req, res) => {
   const _id = req.params.id;
   try {
