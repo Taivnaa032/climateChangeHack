@@ -25,7 +25,7 @@ export const Notification = ({ req }) => {
 
   return (
     <div className="flex justify-around mx-5">
-      <p>afds</p>
+      <p></p>
     </div>
   );
 };
