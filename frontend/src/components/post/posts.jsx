@@ -66,7 +66,7 @@ const Posts = () => {
                     </p>
                   ))}
                 </div>
-                <div className="flex flex-col gap-10">
+                <div className="flex flex-col bg-[#F9F7F0] gap-10">
                   <p className="text-base text-gray-700 font-bold">Items:</p>
                   {showFullDescription
                     ? user.items.map((el, i) => (
